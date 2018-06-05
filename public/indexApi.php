@@ -3,27 +3,28 @@ declare (strict_types = 1);
 namespace AppApiRest;
 header('Content-Type: text/html; charset=UTF-8');
 
-use \DateTime;
-use \Connexion\ConfigDataBase;
-use \Connexion\Database;
-use \Team\TeamManagerMYSQL;
-use \User\User;
-use \User\UserManagerMYSQL;
-use \TypeMatch\TypeMatchManagerMYSQL;
-use \TypePari\TypePariManagerMYSQL;
-use \Match\MatchManagerMYSQL;
-use \Match\Match;
-use \GroupeMatch\GroupeMatchManagerMYSQL;
-use \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL;
-use \Cotes\CotesManagerMYSQL;
-use \Cotes\Cotes;
+// use \DateTime;
+// use \Connexion\ConfigDataBase;
+// use \Connexion\Database;
+// use \Team\TeamManagerMYSQL;
+// use \User\User;
+// use \User\UserManagerMYSQL;
+// use \TypeMatch\TypeMatchManagerMYSQL;
+// use \TypePari\TypePariManagerMYSQL;
+// use \Match\MatchManagerMYSQL;
+// use \Match\Match;
+// use \GroupeMatch\GroupeMatchManagerMYSQL;
+// use \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL;
+// use \Cotes\CotesManagerMYSQL;
+// use \Cotes\Cotes;
 
 
-require_once './../src/Autoloader.class.php';
+require_once './../App/Autoloader.class.php';
 Autoloader::register();
 $ConfigDataBase = new ConfigDataBase('netfocus', './../');
 $Db = Database::init($ConfigDataBase);
 
+// echo 'coucou';
 /*
 // initialisation
 $ch = curl_init( );
@@ -43,7 +44,7 @@ curl_close( $ch );
 
 // var_dump($page);
 //*/
-$User = UserManagerMYSQL::connexion('Thortur', 'Mendy!2');
+// $User = UserManagerMYSQL::connexion('Thortur', 'Mendy!2');
 
 // if($User instanceof User) {
 //     echo 'Oui<br/>';
@@ -79,7 +80,7 @@ $User = UserManagerMYSQL::connexion('Thortur', 'Mendy!2');
 // var_dump($listGroup);
 // $listGroup = GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail();
 // var_dump($listGroup);
-$dateNow = new DateTime();
+// $dateNow = new DateTime();
 // $dateNow->setTime(12, 34, 38);
 // $Cotes = new Cotes(array(
 //     'id'         => null,

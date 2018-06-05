@@ -70,7 +70,15 @@ class User {
         $this->setDataUser($data['dataUser']);
     }
 
-    
+    public function getArray() {
+        return array(
+            'id'     => $this->getId(),
+            'nom'    => $this->getNom(),
+            'prenom' => $this->getPrenom(),
+            'pseudo' => $this->getPseudo(),
+            'mail'   => $this->getMail(),
+        );
+    }
 
     /**
      * Get id User
@@ -186,7 +194,7 @@ class User {
      */ 
     public function setMail(string $mail)
     {
-        $this->mail = $mail;
+        $this->mail = strtolower($mail);
 
         return $this;
     }
@@ -237,5 +245,35 @@ class User {
         $this->dataUser = $dataUser;
 
         return $this;
+    }
+
+
+    /**
+     * Creation de l'utilisateur
+     * 
+     * @param User $User
+     * @return User $User
+     */
+    public static function createUser(User $User) {
+        if(self::isLoginOrMailExiste($User) === false) {
+            $User = self::insertUser($User);
+            $Cagnotte = new Cagnotte(array(
+                'id'      => -1,
+                'idUser'  => $User->getId(),
+                'date'    => new DateTime(),
+                'montant' => 500,
+            ));
+            $Cagnotte = CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
+            $DataUser = new DataUser(array(
+                'cagnotte' => array($Cagnotte),
+            ));
+
+            $User->setDataUser($DataUser);
+        }
+        else {
+            $User = false;
+        }
+
+        return $User;
     }
 }

@@ -218,34 +218,26 @@ class UserManagerMYSQL {
         return $error;
     }
 
-    /**
-     * Creation de l'utilisateur
-     * 
-     * @param User $User
-     * @return User $User
-     */
-    public static function createUser(User $User) {
-        if(self::isLoginOrMailExiste($User) === false) {
-            $User = self::insertUser($User);
-            $Cagnotte = new Cagnotte(array(
-                'id'      => -1,
-                'idUser'  => $User->getId(),
-                'date'    => new DateTime(),
-                'montant' => 500,
-            ));
-            $Cagnotte = CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
-            var_dump($Cagnotte);
-            var_dump($User);
-            $DataUser = new DataUser(array(
-                'cagnotte' => array($Cagnotte),
-            ));
-
-            $User->setDataUser($DataUser);
+    public static function resetPassWord(User $User) {
+        $Db  = Database::init();
+        $req = "SELECT
+                    *
+                FROM user
+                WHERE
+                    user.mail = :mail";
+        $data = array(
+            ':mail' => array(
+                'type'  => 'string',
+                'value' => $User->getMail(),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+        if(empty($res) === false) {
+            var_dump($res);
+            $password = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0,  8);
+            $req = "UPDATE user SET password = '".$password."' WHERE id = '".$res[0]['id']."';";
+            $Db->exec($req);
+            mail($res[0]['mail'], 'Pari entre amis - Chagement de mot de passe', 'Votre nouveau mot de passe est : '.$password);
         }
-        else {
-            $User = false;
-        }
-
-        return $User;
     }
 }
