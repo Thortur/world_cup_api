@@ -3,6 +3,24 @@ declare (strict_types = 1);
 namespace AppApiRest;
 header('Content-Type: text/html; charset=UTF-8');
 
+use \DateTime;
+use \Connexion\ConfigDataBase;
+use \Connexion\Database;
+
+require_once './../app/Autoloader.class.php';
+Autoloader::register();
+$ConfigDataBase = new ConfigDataBase('lefevrecuv001', './../');
+$Db = Database::init($ConfigDataBase);
+echo '<pre>';
+var_dump($ConfigDataBase);
+var_dump($Db);
+echo '</pre>';
+unset($ConfigDataBase);
+// Initiiate Library
+// $api = new ApiApp();
+// $api->processApi();
+
+
 // use \DateTime;
 // use \Connexion\ConfigDataBase;
 // use \Connexion\Database;
@@ -19,10 +37,6 @@ header('Content-Type: text/html; charset=UTF-8');
 // use \Cotes\Cotes;
 
 
-require_once './../app/Autoloader.class.php';
-Autoloader::register();
-$ConfigDataBase = new ConfigDataBase('netfocus', './../');
-$Db = Database::init($ConfigDataBase);
 
 // echo 'coucou';
 /*

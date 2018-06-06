@@ -61,7 +61,10 @@ class PDODataBase extends Database implements iDatabase {
 				//$this->uniqId = uniqId(); //permet de verifie l'objet est declaré une fois
 				
 				if (is_null($this->_connexion) || empty($this->_connexion)) {
-					$dsn = $this->DB_driver.':host='.$this->DB_host.';port='.$this->DB_port.';dbname='.$this->DB_database;
+					$dsn = $this->DB_driver.':host='.$this->DB_host.';dbname='.$this->DB_database.';charset=utf8;';
+					if(empty($this->DB_port) === false) {
+						$dsn .= 'port='.$this->DB_port.';';
+					}
 					$this->_connexion = new \PDO($dsn, $this->DB_user, $this->DB_password);
 					unset($dsn);
 				}

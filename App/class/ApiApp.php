@@ -23,7 +23,7 @@ class ApiApp extends ApiRest {
             // if(in_array($listVar[0], $this->listLangue) === true) {
             //     $this->langue = $listVar[0];
             // }
-            $func = strtolower(trim($listVar[0]));
+            $func = trim($listVar[0]);
             if((int)method_exists($this, $func) > 0) {
                 $this->$func(); 
             }
