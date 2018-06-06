@@ -31,7 +31,7 @@ class Autoloader {
             $root .= '../';
         }
         
-        $chemin = $root.'world_cup_api/App/';
+        $chemin = $root.'world_cup_api/app/';
         Autoloader::autoload($chemin, $class, false);
     }
 

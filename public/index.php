@@ -7,7 +7,7 @@ use \DateTime;
 use \Connexion\ConfigDataBase;
 use \Connexion\Database;
 
-require_once './../App/Autoloader.class.php';
+require_once './../app/Autoloader.class.php';
 Autoloader::register();
 $ConfigDataBase = new ConfigDataBase('netfocus', './../');
 $Db = Database::init($ConfigDataBase);
