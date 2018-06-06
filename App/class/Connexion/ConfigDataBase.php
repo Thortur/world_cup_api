@@ -33,8 +33,8 @@ class ConfigDataBase {
         //on charge les parametres de connexion a la base
 		switch($bdd) {
             case 'netfocus' :
-				// $this->settings = require $root.'/config/netfocus.php';
-                // break;
+				$this->settings = require $root.'/config/netfocus.php';
+                break;
             case 'lefevrecuv001' :
 				$this->settings = require $root.'/config/lefevrecuv001.php';
 				break;
