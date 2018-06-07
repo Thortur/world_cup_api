@@ -26,6 +26,15 @@ class TypePari {
         $this->setTypePari((string)$data['typePari']);
     }
     
+    /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'       => $this->getId(),
+            'typePari' => $this->getTypePari(),
+        );
+    }
 
     /**
      * Get id type pari

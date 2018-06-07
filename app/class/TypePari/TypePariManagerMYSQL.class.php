@@ -19,10 +19,10 @@ class TypePariManagerMYSQL {
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
-        return $listTypePari;
-                $listTypePari[] = new TypePari($data);
+                $TypePari = new TypePari($data);
+                $listTypePari[] = $TypePari->getArray();
             }
-            unset($data);
+            unset($data, $TypePari);
         }
         unset($res);
 

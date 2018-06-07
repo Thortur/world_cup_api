@@ -19,9 +19,10 @@ class MatchManagerMYSQL {
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
-                $listMatch[] = new Match($data);
+                $Match = new Match($data);
+                $listMatch[] = $Match->getArray();
             }
-            unset($data);
+            unset($data, $Match);
         }
         unset($res);
 

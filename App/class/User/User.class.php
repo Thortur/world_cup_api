@@ -82,6 +82,9 @@ class User {
         $this->setDataUser($data['dataUser']);
     }
 
+    /**
+     * Retourne un tableau representatif de l'object Team
+     */
     public function getArray() {
         return array(
             'id'          => $this->getId(),

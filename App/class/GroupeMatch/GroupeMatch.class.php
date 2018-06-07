@@ -26,6 +26,15 @@ class GroupeMatch {
         $this->setGroupe((string)$data['groupe']);
     }
     
+    /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'     => $this->getId(),
+            'groupe' => $this->getGroupe(),
+        );
+    }
 
     /**
      * Get id groupe match

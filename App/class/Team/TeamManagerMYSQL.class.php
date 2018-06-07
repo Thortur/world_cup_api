@@ -20,12 +20,12 @@ class TeamManagerMYSQL {
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
-                $listTeam[] = new Team($data);
+                $Team = new Team($data);
+                $listTeam[] = $Team->getArray();
             }
-            unset($data);
+            unset($data, $Team);
         }
         unset($res);
-
         return $listTeam;
     }
 }

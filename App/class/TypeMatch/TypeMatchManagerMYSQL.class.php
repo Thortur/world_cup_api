@@ -19,9 +19,10 @@ class TypeMatchManagerMYSQL {
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
-                $listTypeMatch[] = new TypeMatch($data);
+                $TypeMatch = new TypeMatch($data);
+                $listTypeMatch[] = $TypeMatch->getArray();
             }
-            unset($data);
+            unset($data, $TypeMatch);
         }
         unset($res);
 
