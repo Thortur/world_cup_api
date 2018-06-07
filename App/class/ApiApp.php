@@ -125,8 +125,86 @@ class ApiApp extends ApiRest {
      */
     private function confirmMail() {
         if(empty($this->requestData['id']) === false && empty($this->requestData['mail']) === false) {
-        \User\UserManagerMYSQL::confirmMail((int)$this->requestData['id'], (string)$this->requestData['mail']);
+            \User\UserManagerMYSQL::confirmMail((int)$this->requestData['id'], (string)$this->requestData['mail']);
             $this->response($this->json(true), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des la liste complete des type de match
+     */
+    private function loadListTypeMatch() {
+        $listTypeMatch = \TypeMatch\TypeMatchManagerMYSQL::loadListAllTypeMatch();
+        if(empty($listTypeMatch) === false) {
+            $this->response($this->json($listTypeMatch), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des la liste complete des groupes de match
+     */
+    private function loadListGroupeMatch() {
+        $listGroupeMatch = \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe();
+        if(empty($listGroupeMatch) === false) {
+            $this->response($this->json($listGroupeMatch), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des la liste complete des groupes de match
+     */
+    private function loadListMatch() {
+        $listMatch = \Match\MatchManagerMYSQL::loadListAllMatch();
+        if(empty($listMatch) === false) {
+            $this->response($this->json($listMatch), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des la liste complete des groupes de match detail
+     */
+    private function loadListGroupeMatchDetail() {
+        $listGroupeMatchDetail = \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail();
+        if(empty($listGroupeMatchDetail) === false) {
+            $this->response($this->json($listGroupeMatchDetail), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des la liste complete des type de pari
+     */
+    // private function loadListTypePari() {
+    //     $listTypePari = \TypePari\TypePariManagerMYSQL::loadListAllTypePari();
+    //     if(empty($listTypePari) === false) {
+    //         $this->response($this->json($listTypePari), 200);
+    //     }
+    //     else {
+    //         $this->response('', 204); 
+    //     }
+    // }
+
+    /**
+     * Retourne la liste complete des equipes
+     */
+    private function loadListTeam() {
+        $listTeam = \Team\TeamManagerMYSQL::loadListAllTeam();
+        if(empty($listTeam) === false) {
+            $this->response($this->json($listTeam), 200);
         }
         else {
             $this->response('', 204); 

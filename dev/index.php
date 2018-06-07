@@ -5,17 +5,19 @@ use \SendRequete\SendRequete;
 header('Content-Type: text/html; charset=UTF-8');
 require_once './SendRequete.class.php';
 
-$fct  = 'createUser';
+$fct  = 'loadListTypePari';
 $data = array(
 
 );
 
 //send requete
 $SendRequete = new SendRequete($fct, $data);
+// var_dump($SendRequete);
 $reponse     = $SendRequete->exec();
 
 //show resultat
-// echo $reponse;
 echo '<pre>';
+    echo $reponse;
     var_dump($reponse);
+    // print_r($reponse);
 echo '</pre>';

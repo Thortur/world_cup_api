@@ -26,7 +26,15 @@ class TypeMatch {
         $this->setNom((string)$data['nom']);
     }
 
-    
+    /**
+     * Retourne un tableau representatif de l'object TypeMatch
+     */
+    public function getArray() {
+        return array(
+            'id'  => $this->getId(),
+            'nom' => $this->getNom(),
+        );
+    }
 
     /**
      * Get id type de match

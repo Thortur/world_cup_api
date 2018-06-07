@@ -34,6 +34,17 @@ class Team {
     }
 
     /**
+     * Retourne un tableau representatif de l'object Team
+     */
+    public function getArray() {
+        return array(
+            'id'  => $this->getId(),
+            'nom' => $this->getNom(),
+            'iso' => $this->getIso(),
+        );
+    }
+
+    /**
      * @param int $id de la team
      */
     public function setId(int $id) {

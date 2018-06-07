@@ -55,6 +55,20 @@ class Match {
     }
 
     /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'            => $this->getId(),
+            'date'          => $this->getDate()->format('Y-m-d H:i:s'),
+            'teamA'         => $this->getTeamA(),
+            'teamB'         => $this->getTeamB(),
+            'idTypeMatch'   => $this->getIdTypeMatch(),
+            'idGroupeMatch' => $this->getIdGroupeMatch(),
+        );
+    }
+
+    /**
      * Get id match
      *
      * @return  int

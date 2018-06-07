@@ -19,9 +19,10 @@ class GroupeMatchDetailManagerMYSQL {
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
-                $listGroupDetail[] = new GroupeMatchDetail($data);
+                $GroupeMatchDetail = new GroupeMatchDetail($data);
+                $listGroupDetail[] = $GroupeMatchDetail->getArray();
             }
-            unset($data);
+            unset($data, $GroupeMatchDetail);
         }
         unset($res);
 

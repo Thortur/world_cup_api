@@ -42,6 +42,17 @@ class GroupeMatchDetail {
         $this->setIdTeam((int)$data['idTeam']);
     }
     
+    /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'            => $this->getId(),
+            'idGroupeMatch' => $this->getIdGroupeMatch(),
+            'ordre'         => $this->getOrdre(),
+            'idTeam'        => $this->getIdTeam(),
+        );
+    }
 
     /**
      * Get id type pari
