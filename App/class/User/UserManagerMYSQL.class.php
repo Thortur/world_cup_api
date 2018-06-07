@@ -1,10 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace User;
-use \DateTime;
 use \Connexion\Database;
-use \Cagnotte\CagnotteManagerMYSQL;
-use \Cagnotte\Cagnotte;
 include_once 'User.class.php';
 include_once 'DataUser.class.php';
 
@@ -62,7 +59,7 @@ class UserManagerMYSQL {
                     ),
                     ':password' => array(
                         'type'  => 'string',
-                        'value' => $User->getPassword(),
+                        'value' => self::encodePassWord($User->getPassword()),
                     ),
                 );
         $Db->execStatement($req, $data);
@@ -121,7 +118,7 @@ class UserManagerMYSQL {
         $data = array(
             ':password' => array(
                 'type'  => 'password',
-                'value' => $User->getPassword(),
+                'value' => self::encodePassWord($User->getPassword()),
             ),
             ':id' => array(
                 'type'  => 'int',
@@ -154,7 +151,8 @@ class UserManagerMYSQL {
                     FROM user
                     WHERE
                         user.pseudo = :pseudo
-                        AND user.password = :password";
+                        AND user.password = :password
+                        AND mailConfirm = '1'";
             $data = array(
                 ':pseudo' => array(
                     'type'  => 'string',
@@ -162,7 +160,7 @@ class UserManagerMYSQL {
                 ),
                 ':password' => array(
                     'type'  => 'string',
-                    'value' => $password,
+                    'value' => self::encodePassWord($password),
                 ),
             );
 
@@ -214,7 +212,8 @@ class UserManagerMYSQL {
         if(empty($res) === true) {
             $error = false;
         }
-        
+        unset($res);
+
         return $error;
     }
 
@@ -233,11 +232,55 @@ class UserManagerMYSQL {
         );
         $res = $Db->execStatement($req, $data);
         if(empty($res) === false) {
-            var_dump($res);
             $password = substr( str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0,  8);
+            $password = self::encodePassWord($password);
             $req = "UPDATE user SET password = '".$password."' WHERE id = '".$res[0]['id']."';";
             $Db->exec($req);
             mail($res[0]['mail'], 'Pari entre amis - Chagement de mot de passe', 'Votre nouveau mot de passe est : '.$password);
+            unset($password, $req);
         }
+        unset($res);
+    }
+
+    /**
+     * Encodage du mot de passe
+     * 
+     * @param string password $password
+     * @return string $password
+     */
+    private static function encodePassWord(string $password) {
+        // $options = [
+        //     'memory_cost' => 1<<17, // 128 Mb
+        //     'time_cost'   => 4,
+        //     'threads'     => 3,
+        // ];
+        // return password_hash($password, PASSWORD_ARGON2I, $options);
+
+        return $password;
+    }
+
+    /**
+     * confimaton de l'adresse mail
+     * 
+     * @param int $id
+     * @param string $mail
+     * @return User $User
+     */
+    public static function confirmMail(int $id, string $mail) {
+        $Db  = Database::init();
+        $req = "UPDATE user SET mailConfirm = 1 WHERE id = :id AND mail = :mail;";
+        $data = array(
+            ':id' => array(
+                'type'  => 'int',
+                'value' => $id
+            ),
+            ':mail' => array(
+                'type'  => 'string',
+                'value' => $mail
+            )
+        );
+        $res = $Db->execStatement($req, $data);
+        
+        return true;
     }
 }

@@ -1,6 +1,9 @@
 <?php
 declare(strict_types = 1);
 namespace User;
+use \DateTime;
+use \Cagnotte\CagnotteManagerMYSQL;
+use \Cagnotte\Cagnotte;
 
 class User {
     /**
@@ -39,6 +42,12 @@ class User {
      * @var string
      */
     private $password;
+    /**
+     * mail confirm
+     * 
+     * @var bool
+     */
+    private $mailConfirm;
 
     /**
      * Data user
@@ -57,13 +66,16 @@ class User {
         if(empty($data['id']) === true) {
             $data['id'] = -1;
         }
-        
+        if(empty($data['mailConfirm']) === true) {
+            $data['mailConfirm'] = false;
+        }
         $this->setId((int)$data['id']);
         $this->setNom((string)$data['nom']);
         $this->setPrenom((string)$data['prenom']);
         $this->setPseudo((string)$data['pseudo']);
         $this->setMail((string)$data['mail']);
         $this->setPassword((string)$data['password']);
+        $this->setMailConfirm((bool)$data['mailConfirm']);
         if(empty($data['dataUser']) === true) {
             $data['dataUser'] = new DataUser(array());
         }
@@ -72,11 +84,12 @@ class User {
 
     public function getArray() {
         return array(
-            'id'     => $this->getId(),
-            'nom'    => $this->getNom(),
-            'prenom' => $this->getPrenom(),
-            'pseudo' => $this->getPseudo(),
-            'mail'   => $this->getMail(),
+            'id'          => $this->getId(),
+            'nom'         => $this->getNom(),
+            'prenom'      => $this->getPrenom(),
+            'pseudo'      => $this->getPseudo(),
+            'mail'        => $this->getMail(),
+            'mailConfirm' => $this->isMailConfirm(),
         );
     }
 
@@ -224,6 +237,30 @@ class User {
     }    
 
     /**
+     * Get mail confirm
+     *
+     * @return  bool
+     */ 
+    public function isMailConfirm()
+    {
+        return $this->mailConfirm;
+    }
+
+    /**
+     * Set mail confirm
+     *
+     * @param  bool  $mailConfirm  mail confirm
+     *
+     * @return  self
+     */ 
+    public function setMailConfirm(bool $mailConfirm)
+    {
+        $this->mailConfirm = $mailConfirm;
+
+        return $this;
+    }
+
+    /**
      * Get data user
      *
      * @return  array
@@ -255,8 +292,9 @@ class User {
      * @return User $User
      */
     public static function createUser(User $User) {
-        if(self::isLoginOrMailExiste($User) === false) {
-            $User = self::insertUser($User);
+        if(UserManagerMYSQL::isLoginOrMailExiste($User) === false) {
+            $User = UserManagerMYSQL::insertUser($User);
+            mail($User->getMail(), 'Confirmation d\'adresse mail', 'Click sur le lien pour confimer ton adresse mail : <a href="worldcup.lefevrechristophe.fr/public/confirmMail.php?id='.$User->getId().'&mail='.$User->getMail().'">Je confirme mon adresse mail!</a>');
             $Cagnotte = new Cagnotte(array(
                 'id'      => -1,
                 'idUser'  => $User->getId(),
