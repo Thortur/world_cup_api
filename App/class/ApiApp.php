@@ -41,7 +41,7 @@ class ApiApp extends ApiRest {
      * @param array $data
     */ 
     private function json($data){ 
-        if(\is_array($data) === true){ 
+        if(\is_array($data) === true ||\is_bool($data) === true){ 
             return json_encode($data);
         } 
     }
@@ -56,13 +56,13 @@ class ApiApp extends ApiRest {
             'id'       => -1,
             'nom'      => '',
             'prenom'   => '',
-            'pseudo'   => $this->requestData['pseudo'],
+            'pseudo'   => (string)$this->requestData['pseudo'],
             'mail'     => '',
-            'password' => $this->requestData['password'],
+            'password' => (string)$this->requestData['password'],
             'dataUser' => array(),
         ));
         
-        $User = \User\UserManagerMYSQL::connexion($this->requestData['pseudo'], $this->requestData['password']);
+        $User = \User\UserManagerMYSQL::connexion((string)$this->requestData['pseudo'], (string)$this->requestData['password']);
         
         if($User !== false) {
             $this->response($this->json($User->getArray()), 200);
@@ -80,11 +80,11 @@ class ApiApp extends ApiRest {
     private function createUser() {
         $User = new \User\User(array(
             'id'       => -1,
-            'nom'      => $this->requestData['nom'],
-            'prenom'   => $this->requestData['prenom'],
-            'pseudo'   => $this->requestData['pseudo'],
-            'mail'     => $this->requestData['mail'],
-            'password' => $this->requestData['password'],
+            'nom'      => (string)$this->requestData['nom'],
+            'prenom'   => (string)$this->requestData['prenom'],
+            'pseudo'   => (string)$this->requestData['pseudo'],
+            'mail'     => (string)$this->requestData['mail'],
+            'password' => (string)$this->requestData['password'],
             'dataUser' => array(),
         ));
 
@@ -98,16 +98,38 @@ class ApiApp extends ApiRest {
         }
     }
 
+    /**
+     * Reset du mot de passe utilisateur
+     */
     private function resetPassWord() {
-        $User = new \User\User(array(
-            'id'       => -1,
-            'nom'      => '',
-            'prenom'   => '',
-            'pseudo'   => '',
-            'mail'     => $this->requestData['mail'],
-            'password' => '',
-            'dataUser' => array()
-        ));
-        $User = \User\UserManagerMYSQL::resetPassWord($User);
+        if(empty($this->requestData['mail']) === false) {
+            $User = new \User\User(array(
+                'id'       => -1,
+                'nom'      => '',
+                'prenom'   => '',
+                'pseudo'   => '',
+                'mail'     => (string)$this->requestData['mail'],
+                'password' => '',
+                'dataUser' => array()
+            ));
+            $User = \User\UserManagerMYSQL::resetPassWord($User);
+            $this->response($this->json(true), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Confirmation du mail lors de l'inscription ou modification
+     */
+    private function confirmMail() {
+        if(empty($this->requestData['id']) === false && empty($this->requestData['mail']) === false) {
+        \User\UserManagerMYSQL::confirmMail((int)$this->requestData['id'], (string)$this->requestData['mail']);
+            $this->response($this->json(true), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
     }
 }
