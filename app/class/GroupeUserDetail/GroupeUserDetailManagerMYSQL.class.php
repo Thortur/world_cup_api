@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace GroupeUserDetail;
+namespace GroupeUser;
 use \Connexion\Database;
 include_once 'GroupeUserDetail.class.php';
 
@@ -10,8 +10,8 @@ class GroupeUserDetailManagerMYSQL {
      * 
      * @return array $listGroupDetail
      */
-    public static function loadListAllGroupeDetail() {
-        $listGroupDetail = array();
+    public static function loadListAllGroupeUserDetail() {
+        $listGroupUserDetail = array();
         $Db = Database::init();
         $req = "SELECT
                     *
@@ -20,12 +20,12 @@ class GroupeUserDetailManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $GroupeUserDetail = new GroupeUserDetail($data);
-                $listGroupDetail[] = $GroupeUserDetail->getArray();
+                $listGroupUserDetail[] = $GroupeUserDetail->getArray();
             }
             unset($data, $GroupeUserDetail);
         }
         unset($res);
-
-        return $listGroupDetail;
+        
+        return $listGroupUserDetail;
     }
 }

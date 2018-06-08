@@ -5,7 +5,7 @@ use \SendRequete\SendRequete;
 header('Content-Type: text/html; charset=UTF-8');
 require_once './SendRequete.class.php';
 
-$fct  = 'loadListTypePari';
+$fct  = 'loadListAllGroupeUserDetail';
 $data = array(
 
 );

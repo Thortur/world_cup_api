@@ -43,7 +43,7 @@ class GroupeUser {
         $this->setId((int)$data['id']);
         $this->setCode((string)$data['code']);
         $this->setNom((string)$data['nom']);
-        $this->setIdUserMaster((string)$data['idUserMaster']);
+        $this->setIdUserMaster((int)$data['idUserMaster']);
         $this->setPrivate((bool)$data['private']);
     }
     

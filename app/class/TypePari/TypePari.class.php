@@ -79,7 +79,7 @@ class TypePari {
      */ 
     public function setTypePari(string $typePari)
     {
-        $this->typePari = $type;
+        $this->typePari = $typePari;
 
         return $this;
     }
