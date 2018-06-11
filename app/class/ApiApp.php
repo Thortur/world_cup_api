@@ -136,7 +136,7 @@ class ApiApp extends ApiRest {
     /**
      * Chargement des la liste complete des type de match
      */
-    private function loadListTypeMatch() {
+    private function loadListAllTypeMatch() {
         $listTypeMatch = \TypeMatch\TypeMatchManagerMYSQL::loadListAllTypeMatch();
         if(empty($listTypeMatch) === false) {
             $this->response($this->json($listTypeMatch), 200);
@@ -149,7 +149,7 @@ class ApiApp extends ApiRest {
     /**
      * Chargement des la liste complete des groupes de match
      */
-    private function loadListGroupeMatch() {
+    private function loadListAllGroupe() {
         $listGroupeMatch = \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe();
         if(empty($listGroupeMatch) === false) {
             $this->response($this->json($listGroupeMatch), 200);
@@ -162,7 +162,7 @@ class ApiApp extends ApiRest {
     /**
      * Chargement des la liste complete des groupes de match
      */
-    private function loadListMatch() {
+    private function loadListAllMatch() {
         $listMatch = \Match\MatchManagerMYSQL::loadListAllMatch();
         if(empty($listMatch) === false) {
             $this->response($this->json($listMatch), 200);
@@ -175,7 +175,7 @@ class ApiApp extends ApiRest {
     /**
      * Chargement des la liste complete des groupes de match detail
      */
-    private function loadListGroupeMatchDetail() {
+    private function loadListAllGroupeDetail() {
         $listGroupeMatchDetail = \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail();
         if(empty($listGroupeMatchDetail) === false) {
             $this->response($this->json($listGroupeMatchDetail), 200);
@@ -188,20 +188,20 @@ class ApiApp extends ApiRest {
     /**
      * Chargement des la liste complete des type de pari
      */
-    // private function loadListTypePari() {
-    //     $listTypePari = \TypePari\TypePariManagerMYSQL::loadListAllTypePari();
-    //     if(empty($listTypePari) === false) {
-    //         $this->response($this->json($listTypePari), 200);
-    //     }
-    //     else {
-    //         $this->response('', 204); 
-    //     }
-    // }
+    private function loadListAllTypePari() {
+        $listTypePari = \TypePari\TypePariManagerMYSQL::loadListAllTypePari();
+        if(empty($listTypePari) === false) {
+            $this->response($this->json($listTypePari), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
 
     /**
      * Retourne la liste complete des equipes
      */
-    private function loadListTeam() {
+    private function loadListAllTeam() {
         $listTeam = \Team\TeamManagerMYSQL::loadListAllTeam();
         if(empty($listTeam) === false) {
             $this->response($this->json($listTeam), 200);
@@ -211,6 +211,32 @@ class ApiApp extends ApiRest {
         }
     }
 
+    /**
+     * Retourne la list complete des groupes user
+     */
+    private function loadListAllGroupeUser() {
+        $listGroupeUser = \GroupeUser\GroupeUserManagerMYSQL::loadListAllGroupeUser();
+        if(empty($listGroupeUser) === false) {
+            $this->response($this->json($listGroupeUser), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Retourne la list des user par groupe
+     */
+    private function loadListAllGroupeUserDetail() {
+        $listGroupeUserDetail = \GroupeUser\GroupeUserDetailManagerMYSQL::loadListAllGroupeUserDetail();
+        if(empty($listGroupeUserDetail) === false) {
+            $this->response($this->json($listGroupeUserDetail), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+  
     /**
      * Retourne la liste complete des equipes
      */

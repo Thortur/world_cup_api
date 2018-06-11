@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace GroupeUserDetail;
+namespace GroupeUser;
 
 class GroupeUserDetail {
     /**

@@ -10,7 +10,7 @@ class GroupeUserManagerMYSQL {
      * 
      * @return array $listGroup
      */
-    public static function loadListAllGroupe() {
+    public static function loadListAllGroupeUser() {
         $listGroup = array();
         $Db = Database::init();
         $req = "SELECT

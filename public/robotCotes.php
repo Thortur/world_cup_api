@@ -22,7 +22,7 @@ $data = $Robot->decryptageData();
 
 class Robot {
     /**
-     * url sur la quel on va piquer les données
+     * url sur la quel on va piquer les donnÃ©es
      *
      * @var string $url
      */
@@ -185,7 +185,7 @@ class Robot {
         if(stripos($team, 'su') !== false && stripos($team, 'de') !== false) {
             $team = 'suede';
         }
-        $team = str_replace(array('é','é','è'), array('&#233;','&#201;','&#232'), $team);
+        $team = str_replace(array('Ã©','Ã©','Ã¨'), array('&#233;','&#201;','&#232'), $team);
      
         $team = \strtolower(htmlentities($team));
         
