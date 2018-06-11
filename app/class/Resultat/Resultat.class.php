@@ -33,11 +33,23 @@ class Resultat {
      * 
      * @param array $data
      */
-    public function __constract($data) {
+    public function __construct($data) {
         $this->setId((int)$data['id']);
         $this->setIdMatch((int)$data['idMatch']);
         $this->setIdTeam((int)$data['idTeam']);
         $this->setScore((int)$data['score']);
+    }
+
+    /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'      => $this->getId(),
+            'idMatch' => $this->getIdMatch(),
+            'idTeam'  => $this->getIdTeam(),
+            'score'   => $this->getScore(),
+        );
     }
 
     /**

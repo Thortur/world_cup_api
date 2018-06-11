@@ -11,11 +11,11 @@ require_once './../app/Autoloader.class.php';
 Autoloader::register();
 $ConfigDataBase = new ConfigDataBase('lefevrecuv001', './../');
 $Db = Database::init($ConfigDataBase);
-echo '<pre>';
-var_dump($ConfigDataBase);
-var_dump($Db);
-echo '</pre>';
-unset($ConfigDataBase);
+// echo '<pre>';
+// var_dump($ConfigDataBase);
+// var_dump($Db);
+// echo '</pre>';
+// unset($ConfigDataBase);
 // Initiiate Library
 // $api = new ApiApp();
 // $api->processApi();
@@ -35,7 +35,10 @@ unset($ConfigDataBase);
 // use \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL;
 // use \Cotes\CotesManagerMYSQL;
 // use \Cotes\Cotes;
-
+use \Resultat\Resultat;
+use \Resultat\ResultatManagerMYSQL;
+echo '<pre>';
+var_dump(ResultatManagerMYSQL::loadListAllResultat());
 
 
 // echo 'coucou';
