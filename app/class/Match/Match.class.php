@@ -55,6 +55,35 @@ class Match {
     }
 
     /**
+     * Checkck si le matche est le meme que l'instance
+     *
+     * @param DateTime $date
+     * @param integer $idTeamA
+     * @param integer $idTeamB
+     * @return boolean
+     */
+    public function isThisMatch(DateTime $date, int $idTeamA, int $idTeamB) {
+        // if($idTeamA === 32 && $idTeamB === 21 && $date->format('Y-m-d') === $this->getDate()->format('Y-m-d') && $this->getId() === 33) {
+        //     echo '<br/>dateMatch => '.$date->format('Y-m-d').' ';
+        //     echo '<br/>Match => '.$this->getDate()->format('Y-m-d').'</br>';
+        //     print_r($this);
+
+        //     echo '==========================<br>';
+            // echo 'if('.$date->format('Y-m-d').' === '.$this->getDate()->format('Y-m-d').' && (('.$idTeamA.' === '.$this->teamA.' && '.$idTeamB.' === '.$this->teamB.') || ('.$idTeamB.' === '.$this->teamA.' && '.$idTeamA.' === '.$this->teamB.'))) {<br/>';
+        // }
+        if($date->format('Y-m-d') === $this->getDate()->format('Y-m-d') && (($idTeamA === $this->teamA && $idTeamB === $this->teamB) || ($idTeamB === $this->teamA && $idTeamA === $this->teamB))) {
+
+            // if($this->getId() === 33) {
+            //     echo '<br/>dateMatch => '.$date->format('Y-m-d').' ';
+            //     echo '<br/>Match => '.$this->getDate()->format('Y-m-d').'</br>';
+            //     print_r($this);
+            // }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Retourne un tableau representatif de l'object
      */
     public function getArray() {

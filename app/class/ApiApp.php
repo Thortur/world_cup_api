@@ -236,4 +236,24 @@ class ApiApp extends ApiRest {
             $this->response('', 204); 
         }
     }
+  
+    /**
+     * Retourne la liste complete des equipes
+     */
+    private function loadDataPageGroupe() {
+        $tabReturn = array(
+            'listTeam'              => \Team\TeamManagerMYSQL::loadListAllTeam(),
+            'listGroupeMatch'       => \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe(),
+            'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
+            'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
+            'listResultat'          => \Resultat\ResultatManagerMYSQL::loadListAllResultat(),
+        );
+        
+        if(empty($tabReturn) === false) {
+            $this->response($this->json($tabReturn), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
 }

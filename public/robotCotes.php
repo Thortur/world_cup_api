@@ -7,37 +7,74 @@ use \DateTime;
 use \Connexion\ConfigDataBase;
 use \Connexion\Database;
 use \Team\TeamManagerMYSQL;
+use \Match\MatchManagerMYSQL;
+use \Cotes\Cotes;
+use \Cotes\CotesManagerMYSQL;
 
 require_once './../app/Autoloader.class.php';
 Autoloader::register();
 $ConfigDataBase = new ConfigDataBase('lefevrecuv001', './../');
 $Db = Database::init($ConfigDataBase);
-// $listTeam = 
-// echo '<pre>';
-// var_dump($listTeam);
-// echo '</pre>';
 
 $Robot = new Robot('https://www.betclic.fr/football/coupe-du-monde-e1');
 $data = $Robot->decryptageData();
 
 
 class Robot {
+    /**
+     * url sur la quel on va piquer les donnÃ©es
+     *
+     * @var string $url
+     */
     private $url;
+    /**
+     * code html de la page
+     *
+     * @var string $codePage
+     */
     private $codePage;
+    /**
+     * Liste des teams
+     *
+     * @var array $listTeam
+     */
     private $listTeam;
+    /**
+     * Liste des matchss
+     *
+     * @var array $listMatch
+     */
+    private $listMatch;
 
-    public function __construct($url) {
+    /**
+     * Construct de la fonction
+     *
+     * @param string $url
+     */
+    public function __construct(string $url) {
         $this->setUrl($url);
         $this->loadCodePage();
-        $this->setListTeam();
+        $this->loadListTeam();
+        $this->loadListMatch();
     }
 
+    /**
+     * Chargemen du code html de la page
+     *
+     * @return void
+     */
     public function loadCodePage() {
         $this->codePage = file_get_contents($this->getUrl());
     }
 
+    /**
+     * Recuperation des cotes depuis le code html de la page
+     *
+     * @return void
+     */
     public function decryptageData() {
         $listJours = $this->decoupageParJour();
+        $dateNow = new DateTime();
 
         if(is_array($listJours) === true && empty($listJours) === false) {
             foreach($listJours as $day) {
@@ -49,9 +86,10 @@ class Robot {
                 $dateMatch->setTime(0, 0, 0);
                 unset($t);
                 
-                $listMatch = explode('<div class="schedule clearfix">', $day);
-                foreach($listMatch as $match) {
-                    $heures = $this->getAttr($match, '<div class="hour">', '<');
+                $listHeure = explode('<div class="schedule clearfix">', $day);
+                foreach($listHeure as $horaire) {
+                    
+                    $heures = $this->getAttr($horaire, '<div class="hour">', '<');
                     if(strlen($heures) === 5) {
                         $heures = explode(':', $heures);
                         $dateMatch->setTime((int)$heures[0], (int)$heures[1], 0);
@@ -59,52 +97,110 @@ class Robot {
                         $idTeamA = 0;
                         $idTeamB = 0;
 
-                        $listTeam = $this->getAttr($day, 'data-track-event-name="', '"');
-                        $listTeam = explode(' - ', $listTeam);
+                        $listMatchHtml = explode('data-track-event-name="', $horaire);
+                        unset($listMatchHtml[0]);
 
-                        echo '<pre>';
-                        $nomTemp = $this->simplificationNomTeam($listTeam[0]);
-                        $idTeamA = $this->listTeam[$nomTemp];
-                        // if(is_null($idTeamA)) {
-                        //     echo $nomTemp.'<br/>';
-                        // }
-                        $nomTemp = $this->simplificationNomTeam($listTeam[1]);
-                        $idTeamB = $this->listTeam[$nomTemp];
-                        // if(is_null($idTeamB)) {
-                        //     echo $nomTemp.'<br/>';
-                        // }
-                        // echo $this->simplificationNomTeam($listTeam[1]); 
-                        // echo $match;
-                        $dataMatch = explode('<div class="match-odd">', $match);
-                        if(is_array($dataMatch) === true && empty($dataMatch) === false) {
-                            unset($dataMatch[0]);
-                            $i = 0;
-                            foreach($dataMatch as $data) {
-                                $cote[$i] = $listTeam = $this->getAttr($data, '>', '<');
-                                $i++;
+                        foreach($listMatchHtml as $htmlMatch) {
+                            $pos = stripos($htmlMatch, '">', 0);
+                            $listTeam = substr($htmlMatch, 0, $pos);
+                            $listTeam = explode(' - ', $listTeam);
+                            $nomTemp = $this->decodeNomTeam($listTeam[0]);
+                            
+                            $idTeamA = (int)$this->listTeam[$nomTemp];
+                            $nomTemp = $this->decodeNomTeam($listTeam[1]);
+                            $idTeamB = (int)$this->listTeam[$nomTemp];
+                            
+                            $dataMatch = explode('<div class="match-odd">', $htmlMatch);
+                            if(is_array($dataMatch) === true && empty($dataMatch) === false) {
+                                unset($dataMatch[0]);
+                                $i = 0;
+                                foreach($dataMatch as $data) {
+                                    $cote[$i] = $this->getAttr($data, '>', '<');
+                                    $cote[$i] = (float)str_replace(',', '.', $cote[$i]);
+                                    $i++;
+                                }
+                                unset($i);
                             }
-                            unset($i);
+                            
+                            if(is_array($this->listMatch) === true && empty($this->listMatch) === false) {
+                                foreach($this->listMatch as $Match) {
+                                    if($Match->isThisMatch($dateMatch, $idTeamA, $idTeamB) === true) {
+                                        $idTypePari = 1;
+                                        $Cotes = new Cotes(array(
+                                            'id'         => -1,
+                                            'idMatch'    => $Match->getId(),
+                                            'idTypePari' => $idTypePari,
+                                            'idTeam'     => $idTeamA,
+                                            'cote'       => $cote[0],
+                                            'date'       => $dateNow,
+                                        ));
+                                        CotesManagerMYSQL::insertCotes($Cotes);
+                                        $Cotes = new Cotes(array(
+                                            'id'         => -1,
+                                            'idMatch'    => $Match->getId(),
+                                            'idTypePari' => $idTypePari,
+                                            'idTeam'     => 0,
+                                            'cote'       => $cote[1],
+                                            'date'       => $dateNow,
+                                        ));
+                                        CotesManagerMYSQL::insertCotes($Cotes);
+                                        $Cotes = new Cotes(array(
+                                            'id'         => -1,
+                                            'idMatch'    => $Match->getId(),
+                                            'idTypePari' => $idTypePari,
+                                            'idTeam'     => $idTeamB,
+                                            'cote'       => $cote[2],
+                                            'date'       => $dateNow,
+                                        ));
+                                        CotesManagerMYSQL::insertCotes($Cotes);
+                                        
+                                        break;
+                                    }
+                                }
+                                unset($Match, $Cotes);
+                            }
                         }
-
-                        
-                        var_dump($cote);
-                        // var_dump($idTeamA);
-                        // var_dump($idTeamB);
-                        echo '</pre>';
                     }
                 }
             }
         }
     }
 
-    public function simplificationNomTeam($team) {
-        // $team = htmlentities($team);
-        // $team = \str_replace('&#201;', 'e', $team);
-        // $team = \htmlentities(\mb_strtoupper($team), ENT_QUOTES, "UTF-8");
-        return \strtolower(\htmlentities($team));
+    /**
+     * Decode le nom de la team
+     *
+     * @param string $team
+     * @return string $team
+     */
+    public function decodeNomTeam(string $team) {
+        if(stripos($team, 'gypte') !== false) {
+            $team = 'egypte';
+        }
+        if(stripos($team, 'e du sud') !== false) {
+            $team = 'coree du sud';
+        }
+        if(stripos($team, 'ria') !== false) {
+            $team = 'nigeria';
+        }
+        if(stripos($team, 'su') !== false && stripos($team, 'de') !== false) {
+            $team = 'suede';
+        }
+        $team = str_replace(array('Ã©','Ã©','Ã¨'), array('&#233;','&#201;','&#232'), $team);
+     
+        $team = \strtolower(htmlentities($team));
+        
+        return $team;
     }
 
-    public function getAttr($day, $start, $end) {
+    /**
+     * Recuperation de la valeur
+     *
+     * @param string $day
+     * @param string $start
+     * @param string $end
+     * @return void
+     */
+    public function getAttr(string $day, string $start, string $end) {
         $len = strlen($start);
         $pos = stripos($day, $start);
         $day = substr($day, $pos+$len);
@@ -112,6 +208,11 @@ class Robot {
         return substr($day, 0, $pos);
     }
 
+    /**
+     * Decoupe le code html en tableau qui represente les jours de la compete
+     *
+     * @return array $listJour
+     */
     public function decoupageParJour() {
         $listJour = explode('entry day-entry grid-9 nm', $this->codePage);
         unset($listJour[0]);
@@ -160,17 +261,45 @@ class Robot {
      *
      * @return  self
      */ 
-    public function setListTeam()
+    public function loadListTeam()
     {
         $listTeam = TeamManagerMYSQL::loadListAllTeam();
         if(is_array($listTeam) === true && empty($listTeam) === false) {
             foreach($listTeam as $team) {
                 $Team = new \Team\Team($team);
-                $nom = $this->simplificationNomTeam($Team->getNom());
+                $nom = $this->decodeNomTeam($Team->getNom());
                 $this->listTeam[$nom] = $Team->getId();
             }
+            unset($team, $Team, $nom);
         } 
-// echo '<pre>';var_dump( $this->listTeam);echo '</pre>';
+        return $this;
+    }
+
+    /**
+     * Get the value of listMatch
+     */ 
+    public function getListMatch()
+    {
+        return $this->listMatch;
+    }
+
+    /**
+     * Set the value of listMatch
+     *
+     * @return  self
+     */ 
+    public function loadListMatch()
+    {
+        $listMatch = MatchManagerMYSQL::loadListAllMatch();
+        
+        if(is_array($listMatch) === true && empty($listMatch) === false) {
+            foreach($listMatch as $match) {
+                $Match = new \Match\Match($match);
+                $this->listMatch[$Match->getId()] = $Match;
+            }
+            unset($match, $Match);
+        }
+
         return $this;
     }
 }

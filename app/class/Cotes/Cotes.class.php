@@ -51,7 +51,6 @@ class Cotes {
         $this->setIdMatch((int)$data['idMatch']);
         $this->setIdTypePari((int)$data['idTypePari']);
         $this->setIdTeam((int)$data['idTeam']);
-        $this->setIdTeam((int)$data['idTeam']);
         $this->setCote((float)$data['cote']);
         $this->setDate($data['date']);
     }
