@@ -63,6 +63,21 @@ class Cotes {
     }
 
     /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'            => $this->getId(),
+            'idGroupeCotes' => $this->getIdGroupeCotes(),
+            'idMatch'       => $this->getIdMatch(),
+            'idTypePari'    => $this->getIdTypePari(),
+            'idTeam'        => $this->getIdTeam(),
+            'cote'          => $this->getCote(),
+            'date'          => $this->getDate()->format('Y-m-d Hi:i:s'),
+        );
+    }
+
+    /**
      * Get id Cotes
      *
      * @return  int

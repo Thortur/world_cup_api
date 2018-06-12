@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace AppApiRest;
-
+use \DateTime;
 /**
  * Class qui gere les demande du client
  */
@@ -247,6 +247,25 @@ class ApiApp extends ApiRest {
             'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
             'listResultat'          => \Resultat\ResultatManagerMYSQL::loadListAllResultat(),
+        );
+        
+        if(empty($tabReturn) === false) {
+            $this->response($this->json($tabReturn), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    private function loadDataPageDashBoard() {
+        $dateNow = new DateTime();
+        $tabReturn = array(
+            'listTeam'              => \Team\TeamManagerMYSQL::loadListAllTeam(),
+            'listGroupeMatch'       => \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe(),
+            'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
+            'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
+            'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
+            'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
         );
         
         if(empty($tabReturn) === false) {
