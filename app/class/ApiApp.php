@@ -264,8 +264,8 @@ class ApiApp extends ApiRest {
             'listGroupeMatch'       => \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe(),
             'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
-            // 'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
-            // 'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
+            'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
+            'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
         );
         
         if(empty($tabReturn) === false) {
