@@ -258,12 +258,14 @@ class ApiApp extends ApiRest {
     }
 
     private function loadDataPageDashBoard() {
+        $dateNow = new DateTime();
         $tabReturn = array(
             'listTeam'              => \Team\TeamManagerMYSQL::loadListAllTeam(),
             'listGroupeMatch'       => \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe(),
             'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
-            'listResultat'          => \Resultat\ResultatManagerMYSQL::loadListAllResultat(),
+            'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
+            'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
         );
         
         if(empty($tabReturn) === false) {
