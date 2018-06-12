@@ -15,7 +15,8 @@ class MatchManagerMYSQL {
         $Db = Database::init();
         $req = "SELECT
                     *
-                FROM `match`";
+                FROM `match`
+                ORDER BY `match`.date";
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {

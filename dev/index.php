@@ -5,15 +5,15 @@ use \SendRequete\SendRequete;
 header('Content-Type: text/html; charset=UTF-8');
 require_once './SendRequete.class.php';
 
-$fct  = 'insertPari';
+$fct  = 'loadAllCagnotte';
 $data = array(
-    'id'         => -1,
-    'idMatch'    => 1,
-    'idTypePari' => 1,
-    'idUser'     => 1,
-    'idCotes'    => 2,
-    'montant'    => 23,
-    'date'       => '',
+//     'id'         => -1,
+//     'idMatch'    => 1,
+//     'idTypePari' => 1,
+//     'idUser'     => 1,
+//     'idCotes'    => 2,
+//     'montant'    => 23,
+//     'date'       => '',
 );
 
 //send requete

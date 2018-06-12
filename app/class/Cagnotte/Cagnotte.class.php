@@ -17,6 +17,12 @@ class Cagnotte {
      */
     private $idUser;
     /**
+     * idUser
+     *
+     * @var int
+     */
+    private $idPari;
+    /**
      * Date de la cagnotte
      *
      * @var DateTime
@@ -38,8 +44,22 @@ class Cagnotte {
     public function __construct(array $data) {
         $this->setId((int)$data['id']);
         $this->setIdUser((int)$data['idUser']);
+        $this->setIdPari((int)$data['idPari']);
         $this->setDate($data['date']);
         $this->setMontant((float)$data['montant']);
+    }
+
+    /**
+     * Retourne un tableau representatif de l'object
+     */
+    public function getArray() {
+        return array(
+            'id'         => $this->getId(),
+            'idUser'     => $this->getIdUser(),
+            'idPari'     => $this->getIdPari(),
+            'montant'    => $this->getMontant(),
+            'date'       => $this->getDate()->format('Y-m-d H:i:s'),
+        );
     }
 
     /**
@@ -86,6 +106,30 @@ class Cagnotte {
     public function setIdUser(int $idUser)
     {
         $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    /**
+     * Get idUser
+     *
+     * @return  int
+     */ 
+    public function getIdPari()
+    {
+        return $this->idPari;
+    }
+
+    /**
+     * Set idUser
+     *
+     * @param  int  $idPari  idUser
+     *
+     * @return  self
+     */ 
+    public function setIdPari(int $idPari)
+    {
+        $this->idPari = $idPari;
 
         return $this;
     }

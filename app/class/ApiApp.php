@@ -292,20 +292,54 @@ class ApiApp extends ApiRest {
             $this->response('', 204); 
         }
     }
+
     /**
      * Retourne les data primiere pour la page dashboard
      */
     private function insertPari() {
-        $Pari = new \Pari\Pari($this->requestData);
-        \Pari\PariManagerMYSQL::isDejaPariMatch($Pari);
-        if(\Pari\PariManagerMYSQL::isDejaPariMatch($Pari) === -1) {
-            \Pari\PariManagerMYSQL::insertPari($Pari);
+        $Pari = new \Pari\Pari(array(
+            'id'         => -1,
+            'idMatch'    => $this->requestData['idMatch'],
+            'idTypePari' => $this->requestData['idTypePari'],
+            'idUser'     => $this->requestData['idUser'],
+            'idCotes'    => $this->requestData['idCotes'],
+            'montant'    => $this->requestData['montant'],
+            'date'       => $this->requestData['date'],
+        ));
+        
+        $idPari = \Pari\PariManagerMYSQL::isDejaPariMatch($Pari);
+        $Pari->setId($idPari);
+        if($Pari->getId() === -1) {
+            $Pari = \Pari\PariManagerMYSQL::insertPari($Pari);
         }
         else {
-            \Pari\PariManagerMYSQL::updatePari($Pari); 
+            $Pari = \Pari\PariManagerMYSQL::updatePari($Pari); 
         }
+
+
+        $Cagnotte = new \Cagnotte\Cagnotte(array(
+            'idUser'  => $this->requestData['idUser'],
+            'idPari'  => $Pari->getId(),
+            'date'    => $this->requestData['date'],
+            'montant' => $this->requestData['montant'],
+        ));
+        \Cagnotte\CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
+        
         if(empty($listPari) === false) {
             $this->response($this->json($listPari), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des cagnotte
+     */
+    private function loadAllCagnotte() {
+        $listCagnotte = \Cagnotte\CagnotteManagerMYSQL::loadAllCagnotte();
+        if(empty($listCagnotte) === false) {
+            $this->response($this->json($listCagnotte), 200);
         }
         else {
             $this->response('', 204); 
