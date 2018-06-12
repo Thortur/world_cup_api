@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace AppApiRest;
-
+use \DateTime;
 /**
  * Class qui gere les demande du client
  */
@@ -264,8 +264,8 @@ class ApiApp extends ApiRest {
             'listGroupeMatch'       => \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe(),
             'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
-            'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
-            'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
+            // 'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
+            // 'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
         );
         
         if(empty($tabReturn) === false) {
