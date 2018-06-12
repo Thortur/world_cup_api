@@ -147,6 +147,25 @@ class CotesManagerMYSQL {
         
         return $lastCotes;
     }
+    
+    /**
+     * Retourne le nouveau id groupe cotes
+     * 
+     * @param int $idGroupeCotes
+     */
+    public static function getNewIdGroupeCotes() {
+        $Db = Database::init();
+        $req = "SELECT MAX(idGroupeCotes)+1 as 'newIdGroupeCotes'
+                FROM cotes";
+        $res = $Db->exec($req);
+        unset($req);
+        $idGroupeCotes = 1;
+        if(empty($res[0]['newIdGroupeCotes']) === false) {
+            $idGroupeCotes = (int)$res[0]['newIdGroupeCotes'];
+        }
+        unset($res);
+        return $idGroupeCotes;
+    }
 
     /**
      * Insert une nouvelle cotes d'un match
@@ -156,8 +175,12 @@ class CotesManagerMYSQL {
      */
     public static function insertCotes(Cotes $Cotes) {
         $Db = Database::init();
-        $req = "INSERT INTO cotes (idMatch, idTypePari, idTeam, cote, date) VALUES (:idMatch, :idTypePari, :idTeam, :cote, :date);";
+        $req = "INSERT INTO cotes (idGroupeCotes, idMatch, idTypePari, idTeam, cote, date) VALUES (:idGroupeCotes, :idMatch, :idTypePari, :idTeam, :cote, :date);";
         $data = array(
+            ':idGroupeCotes' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdGroupeCotes(),
+            ),
             ':idMatch' => array(
                 'type'  => 'int',
                 'value' => $Cotes->getIdMatch(),
