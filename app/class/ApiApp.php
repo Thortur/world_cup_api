@@ -238,7 +238,7 @@ class ApiApp extends ApiRest {
     }
   
     /**
-     * Retourne la liste complete des equipes
+     * Retourne les data primiere pour la page de Groupe
      */
     private function loadDataPageGroupe() {
         $tabReturn = array(
@@ -257,6 +257,9 @@ class ApiApp extends ApiRest {
         }
     }
 
+    /**
+     * Retourne les data primiere pour la page dashboard
+     */
     private function loadDataPageDashBoard() {
         $dateNow = new DateTime();
         $tabReturn = array(
@@ -270,6 +273,39 @@ class ApiApp extends ApiRest {
         
         if(empty($tabReturn) === false) {
             $this->response($this->json($tabReturn), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Retourne les data primiere pour la page dashboard
+     */
+    private function loadListAllPari() {
+        $listPari = \Pari\PariManagerMYSQL::loadListAllPari();
+        
+        if(empty($listPari) === false) {
+            $this->response($this->json($listPari), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+    /**
+     * Retourne les data primiere pour la page dashboard
+     */
+    private function insertPari() {
+        $Pari = new \Pari\Pari($this->requestData);
+        \Pari\PariManagerMYSQL::isDejaPariMatch($Pari);
+        if(\Pari\PariManagerMYSQL::isDejaPariMatch($Pari) === -1) {
+            \Pari\PariManagerMYSQL::insertPari($Pari);
+        }
+        else {
+            \Pari\PariManagerMYSQL::updatePari($Pari); 
+        }
+        if(empty($listPari) === false) {
+            $this->response($this->json($listPari), 200);
         }
         else {
             $this->response('', 204); 
