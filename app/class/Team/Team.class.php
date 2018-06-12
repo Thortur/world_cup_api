@@ -21,7 +21,12 @@ class Team {
      * @var string
      */
     private $iso;
-
+    /**
+     * si pour les flag (2 caractere)
+     *
+     * @var string
+     */
+    private $iso2;
     /**
      * Construct
      * 
@@ -31,6 +36,7 @@ class Team {
         $this->setId((int)$data['id']);
         $this->setNom((string)$data['nom']);
         $this->setIso((string)$data['iso']);
+        $this->setIso2((string)$data['iso2']);
     }
 
     /**
@@ -38,9 +44,10 @@ class Team {
      */
     public function getArray() {
         return array(
-            'id'  => $this->getId(),
-            'nom' => $this->getNom(),
-            'iso' => $this->getIso(),
+            'id'   => $this->getId(),
+            'nom'  => $this->getNom(),
+            'iso'  => $this->getIso(),
+            'iso2' => $this->getIso2(),
         );
     }
 
@@ -93,5 +100,29 @@ class Team {
      */
     public function getflag() {
         return $flag;
+    }
+
+    /**
+     * Get si pour les flag (2 caractere)
+     *
+     * @return  string
+     */ 
+    public function getIso2()
+    {
+        return $this->iso2;
+    }
+
+    /**
+     * Set si pour les flag (2 caractere)
+     *
+     * @param  string  $iso2  si pour les flag (2 caractere)
+     *
+     * @return  self
+     */ 
+    public function setIso2(string $iso2)
+    {
+        $this->iso2 = $iso2;
+
+        return $this;
     }
 }
