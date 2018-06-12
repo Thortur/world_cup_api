@@ -43,7 +43,7 @@ class CotesManagerMYSQL {
                     if(empty($lastCotes[$Cotes->getIdMatch()][$Cotes->getIdTypePari()]) === true) {
                         $lastCotes[$Cotes->getIdMatch()][$Cotes->getIdTypePari()] = array();
                     }
-                    $lastCotes[$Cotes->getIdMatch()][$Cotes->getIdTypePari()][$Cotes->getIdTeam()] = clone $Cotes;
+                    $lastCotes[$Cotes->getIdMatch()][$Cotes->getIdTypePari()][$Cotes->getIdTeam()] = $Cotes->getArray();
 
                 }
             }
