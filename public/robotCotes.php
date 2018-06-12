@@ -22,7 +22,7 @@ $data = $Robot->decryptageData();
 
 class Robot {
     /**
-     * url sur la quel on va piquer les donnÃ©es
+     * url sur la quel on va piquer les données
      *
      * @var string $url
      */
@@ -73,9 +73,10 @@ class Robot {
      * @return void
      */
     public function decryptageData() {
-        $listJours = $this->decoupageParJour();
-        $dateNow = new DateTime();
-
+        $listJours     = $this->decoupageParJour();
+        $dateNow       = new DateTime();
+        $idGroupeCotes = CotesManagerMYSQL::getNewIdGroupeCotes();
+        
         if(is_array($listJours) === true && empty($listJours) === false) {
             foreach($listJours as $day) {
                 //Recuperation date match
@@ -127,30 +128,33 @@ class Robot {
                                     if($Match->isThisMatch($dateMatch, $idTeamA, $idTeamB) === true) {
                                         $idTypePari = 1;
                                         $Cotes = new Cotes(array(
-                                            'id'         => -1,
-                                            'idMatch'    => $Match->getId(),
-                                            'idTypePari' => $idTypePari,
-                                            'idTeam'     => $idTeamA,
-                                            'cote'       => $cote[0],
-                                            'date'       => $dateNow,
+                                            'id'            => -1,
+                                            'idGroupeCotes' => $idGroupeCotes,
+                                            'idMatch'       => $Match->getId(),
+                                            'idTypePari'    => $idTypePari,
+                                            'idTeam'        => $idTeamA,
+                                            'cote'          => $cote[0],
+                                            'date'          => $dateNow,
                                         ));
                                         CotesManagerMYSQL::insertCotes($Cotes);
                                         $Cotes = new Cotes(array(
-                                            'id'         => -1,
-                                            'idMatch'    => $Match->getId(),
-                                            'idTypePari' => $idTypePari,
-                                            'idTeam'     => 0,
-                                            'cote'       => $cote[1],
-                                            'date'       => $dateNow,
+                                            'id'            => -1,
+                                            'idGroupeCotes' => $idGroupeCotes,
+                                            'idMatch'       => $Match->getId(),
+                                            'idTypePari'    => $idTypePari,
+                                            'idTeam'        => 0,
+                                            'cote'          => $cote[1],
+                                            'date'          => $dateNow,
                                         ));
                                         CotesManagerMYSQL::insertCotes($Cotes);
                                         $Cotes = new Cotes(array(
-                                            'id'         => -1,
-                                            'idMatch'    => $Match->getId(),
-                                            'idTypePari' => $idTypePari,
-                                            'idTeam'     => $idTeamB,
-                                            'cote'       => $cote[2],
-                                            'date'       => $dateNow,
+                                            'id'            => -1,
+                                            'idGroupeCotes' => $idGroupeCotes,
+                                            'idMatch'       => $Match->getId(),
+                                            'idTypePari'    => $idTypePari,
+                                            'idTeam'        => $idTeamB,
+                                            'cote'          => $cote[2],
+                                            'date'          => $dateNow,
                                         ));
                                         CotesManagerMYSQL::insertCotes($Cotes);
                                         
@@ -185,7 +189,7 @@ class Robot {
         if(stripos($team, 'su') !== false && stripos($team, 'de') !== false) {
             $team = 'suede';
         }
-        $team = str_replace(array('Ã©','Ã©','Ã¨'), array('&#233;','&#201;','&#232'), $team);
+        $team = str_replace(array('é','é','è'), array('&#233;','&#201;','&#232'), $team);
      
         $team = \strtolower(htmlentities($team));
         

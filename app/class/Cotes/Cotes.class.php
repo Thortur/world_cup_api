@@ -11,6 +11,12 @@ class Cotes {
      */
     private $id;
     /**
+     * id groupe Cotes
+     *
+     * @var int
+     */
+    private $idGroupeCotes;
+    /**
      * id du match
      *
      * @var int
@@ -48,6 +54,7 @@ class Cotes {
      */
     public function __construct(array $data) {
         $this->setId((int)$data['id']);
+        $this->setIdGroupeCotes((int)$data['idGroupeCotes']);
         $this->setIdMatch((int)$data['idMatch']);
         $this->setIdTypePari((int)$data['idTypePari']);
         $this->setIdTeam((int)$data['idTeam']);
@@ -75,6 +82,30 @@ class Cotes {
     public function setId(int $id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id Cotes
+     *
+     * @return  int
+     */ 
+    public function getIdGroupeCotes()
+    {
+        return $this->idGroupeCotes;
+    }
+
+    /**
+     * Set id Cotes
+     *
+     * @param  int  $id  id Cotes
+     *
+     * @return  self
+     */ 
+    public function setIdGroupeCotes(int $idGroupeCotes)
+    {
+        $this->idGroupeCotes = $idGroupeCotes;
 
         return $this;
     }

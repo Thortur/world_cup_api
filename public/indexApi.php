@@ -33,14 +33,15 @@ $Db = Database::init($ConfigDataBase);
 // use \Match\Match;
 // use \GroupeMatch\GroupeMatchManagerMYSQL;
 // use \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL;
-// use \Cotes\CotesManagerMYSQL;
-// use \Cotes\Cotes;
-use \Resultat\Resultat;
-use \Resultat\ResultatManagerMYSQL;
-echo '<pre>';
-var_dump(ResultatManagerMYSQL::loadListAllResultat());
+use \Cotes\CotesManagerMYSQL;
+use \Cotes\Cotes;
+// use \Resultat\Resultat;
+// use \Resultat\ResultatManagerMYSQL;
+// echo '<pre>';
+// var_dump(ResultatManagerMYSQL::loadListAllResultat());
 
-
+$idGroupeCotes = CotesManagerMYSQL::getNewIdGroupeCotes();
+var_dump($idGroupeCotes);
 // echo 'coucou';
 /*
 // initialisation
