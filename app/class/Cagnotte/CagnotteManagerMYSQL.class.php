@@ -5,7 +5,9 @@ use \Connexion\Database;
 include_once 'Cagnotte.class.php';
 
 class CagnotteManagerMYSQL {
-
+    /**
+     * Insert cagnotte
+     */
     public static function insertCagnotte(Cagnotte $Cagnotte) {
         $Db   = Database::init();
         $req  = "INSERT INTO cagnotte (idUser, date, montant) VALUES (:idUser, :date, :montant);";
@@ -28,5 +30,29 @@ class CagnotteManagerMYSQL {
         $Cagnotte->setId($Db->getLastInsertId());
 
         return $Cagnotte;
+    }
+
+    /**
+     * Chargement de tout les cagnottes
+     * 
+     * @return array $listCagnotte
+     */
+    public static function loadAllCagnotte() {
+        $listCagnotte = array();
+        $Db = Database::init();
+        $req = "SELECT
+                    *
+                FROM cagnotte";
+        $res = $Db->exec($req);
+        if(is_array($res) === true && empty($res) === false) {
+            foreach($res as $data) {
+                $Cagnotte = new Cagnotte($data);
+                $listCagnotte[] = $Cagnotte->getArray();
+            }
+            unset($data, $Cagnotte);
+        }
+        unset($res);
+
+        return $listCagnotte;
     }
 }

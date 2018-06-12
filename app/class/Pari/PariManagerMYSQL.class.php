@@ -62,9 +62,8 @@ class PariManagerMYSQL {
         );
         $res = $Db->execStatement($req, $data);
         unset($req, $data, $Pari);
-        var_dump($res);
         if(empty($res[0]['id']) === false) {
-            $idPari = $res[0]['id'];
+            $idPari = (int)$res[0]['id'];
         }
         return $idPari;
     }
@@ -77,6 +76,7 @@ class PariManagerMYSQL {
      */
     public static function insertPari(Pari $Pari) {
         $Db = Database::init();
+        
         $req = "INSERT INTO pari (idMatch, idTypePari, idUser, idCotes, montant, date) VALUES (:idMatch, :idTypePari, :idUser, :idCotes, :montant, :date);";
         $data = array(
             ':idMatch' => array(
@@ -106,9 +106,9 @@ class PariManagerMYSQL {
         );
         
         $Db->execStatement($req, $data);
-        unset($req, $data, $Pari);
-
-        return $Db::$_nbLigne;
+        unset($req, $data);
+        $Pari->setId($Db::getLastInsertId());
+        return $Pari;
     }
 
     /**
@@ -148,7 +148,7 @@ class PariManagerMYSQL {
         );
         
         $Db->execStatement($req, $data);
-        unset($req, $data, $Pari);
-        return $Db::$_nbLigne;
+        unset($req, $data);
+        return $Pari;
     }
 }
