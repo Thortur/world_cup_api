@@ -269,6 +269,7 @@ class ApiApp extends ApiRest {
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
             'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
             'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
+            'listPari'              => \Pari\PariManagerMYSQL::loadListAllPari(),
         );
         
         if(empty($tabReturn) === false) {
