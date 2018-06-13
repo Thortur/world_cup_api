@@ -33,6 +33,8 @@ class Autoloader {
         
         $chemin = $root.'world_cup_api/app/';
         Autoloader::autoload($chemin, $class, false);
+        $chemin = $root.'world_cup_api/src/';
+        Autoloader::autoload($chemin, $class, false);
     }
 
     /**
