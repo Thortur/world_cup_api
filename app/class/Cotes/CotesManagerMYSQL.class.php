@@ -55,6 +55,44 @@ class CotesManagerMYSQL {
     }
 
     /**
+     * Retourne tout les deniere cotes a jour de tout les matchs
+     * 
+     * @return array $listCotes
+     */
+    public static function loadAllCotes() {
+        $Db        = Database::init();
+        $listCotes = array();
+
+        $req = "SELECT
+                    *
+                FROM cotes
+                ORDER BY cotes.date ASC, cotes.idTeam";
+        $res = $Db->exec($req);
+        unset($req, $data);
+
+        if(empty($res) === false) {
+            foreach($res as $dataRow) {
+                $Cotes = new Cotes($dataRow);
+                // if(empty($listCotes[$Cotes->getIdGroupeCotes()]) === true) {
+                //     $listCotes[$Cotes->getIdGroupeCotes()] = array();
+                // }
+                // if(empty($listCotes[$Cotes->getIdGroupeCotes()][$Cotes->getIdMatch()]) === true) {
+                //     $listCotes[$Cotes->getIdGroupeCotes()][$Cotes->getIdMatch()] = array();
+                // }
+                // if(empty($listCotes[$Cotes->getIdGroupeCotes()][$Cotes->getIdMatch()][$Cotes->getIdTypePari()]) === true) {
+                //     $listCotes[$Cotes->getIdGroupeCotes()][$Cotes->getIdMatch()][$Cotes->getIdTypePari()] = array();
+                // }
+                // $listCotes[$Cotes->getIdGroupeCotes()][$Cotes->getIdMatch()][$Cotes->getIdTypePari()][$Cotes->getIdTeam()] = $Cotes->getArray();
+                $listCotes[$Cotes->getId()] = $Cotes->getArray();
+            }
+            unset($dataRow, $Cotes);
+        }
+        unset($res);
+
+        return $listCotes;
+    }
+
+    /**
      * Retour tout les cotes d'un match
      * 
      * @param Match $Match

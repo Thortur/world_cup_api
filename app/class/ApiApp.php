@@ -260,6 +260,20 @@ class ApiApp extends ApiRest {
         }
     }
 
+     /**
+     * Retourne la liste compete des cotes
+     */
+    private function loadAllCotes() {
+        $dateNow = new DateTime();
+        $tabReturn = \Cotes\CotesManagerMYSQL::loadAllCotes();
+        if(empty($tabReturn) === false) {
+            $this->response($this->json($tabReturn), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
     /**
      * Retourne les data primiere pour la page dashboard
      */
@@ -271,7 +285,8 @@ class ApiApp extends ApiRest {
             'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
             'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
-            'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
+            'listCotesLast'         => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
+            'listCotesHisto'        => \Cotes\CotesManagerMYSQL::loadAllCotes(),
             'listPari'              => \Pari\PariManagerMYSQL::loadListAllPari(),
             'listCagnotte'          => \Cagnotte\CagnotteManagerMYSQL::loadAllCagnotte(),
         );
