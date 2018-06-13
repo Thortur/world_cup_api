@@ -329,7 +329,20 @@ class User {
     public static function createUser(User $User) {
         if(UserManagerMYSQL::isLoginOrMailExiste($User) === false) {
             $User = UserManagerMYSQL::insertUser($User);
-            mail($User->getMail(), 'Confirmation d\'adresse mail', 'Click sur le lien pour confimer ton adresse mail : <a href="worldcup.lefevrechristophe.fr/public/confirmMail.php?id='.$User->getId().'&mail='.$User->getMail().'">Je confirme mon adresse mail!</a>');
+            $SendMail = new \SendMail\SendMail(array(
+                'mailAuto' => true,
+                'destinataire' => array(
+                    'mail' => $User->getMail(),
+                    'nom'  => $User->getPseudo(),
+                ),
+                'subject' => "Confirmation d'adresse mail",
+                'body'    => "Bonjour,<br/>\n<br/>\n
+                Vous venez de vous inscrire Mais votre compte n'est pas encore actif.<br/>\n
+                Pour l'activer et passé un bon petit moment, clique sur le lien suivant pour confimer ton adresse mail : <a href=\"https://www.worldcup.lefevrechristophe.fr/public/confirmMail.php?id=".$User->getId()."&mail=".$User->getMail()."\">Je confirme mon adresse mail!</a><br/>\n<br/>\nSinon tu fais rien...<br/>\n<br/>\nBonne journée, ou fin de journée, ou bonne nuit... c'est comme tu veux.<br/>\n<br/>\n Support.",
+                'altBody' => '',
+            ));
+            $SendMail->send();
+
             $Cagnotte = new Cagnotte(array(
                 'id'      => -1,
                 'idUser'  => $User->getId(),
