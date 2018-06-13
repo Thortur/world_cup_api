@@ -1,0 +1,2 @@
+# RewriteEngine On
+# Redirect "/index.php" "/public/error/404.php"

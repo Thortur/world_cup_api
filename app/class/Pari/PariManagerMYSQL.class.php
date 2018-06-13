@@ -107,7 +107,8 @@ class PariManagerMYSQL {
         
         $Db->execStatement($req, $data);
         unset($req, $data);
-        $Pari->setId($Db::getLastInsertId());
+        $Pari->setId($Db->getLastInsertId());
+        
         return $Pari;
     }
 

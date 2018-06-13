@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Cagnotte;
 use \Connexion\Database;
 include_once 'Cagnotte.class.php';
+include_once 'CagnotteManager.class.php';
 
 class CagnotteManagerMYSQL {
     /**
@@ -10,11 +11,15 @@ class CagnotteManagerMYSQL {
      */
     public static function insertCagnotte(Cagnotte $Cagnotte) {
         $Db   = Database::init();
-        $req  = "INSERT INTO cagnotte (idUser, date, montant) VALUES (:idUser, :date, :montant);";
+        $req  = "INSERT INTO cagnotte (idUser, idPari, date, montant) VALUES (:idUser, :idPari, :date, :montant);";
         $data = array(
             ':idUser' => array(
                 'type'  => 'int',
                 'value' => $Cagnotte->getIdUser(),
+            ),
+            ':idPari' => array(
+                'type'  => 'int',
+                'value' => $Cagnotte->getIdPari(),
             ),
             ':date' => array(
                 'type'  => 'string',
@@ -33,6 +38,38 @@ class CagnotteManagerMYSQL {
     }
 
     /**
+     * Chargement de tout les cagnottes d'un user
+     * 
+     * @return array $listCagnotte
+     */
+    public static function loadCagnotteUser(int $idUser) {
+        $listCagnotte = array();
+        $Db = Database::init();
+        $req = "SELECT
+                *
+                FROM cagnotte
+                WHERE
+                    cagnotte.idUser = :idUser";
+        $data = array(
+            ':idUser' => array(
+                'type'  => 'int',
+                'value' => $idUser,
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+        if(is_array($res) === true && empty($res) === false) {
+            foreach($res as $data) {
+                $Cagnotte = new Cagnotte($data);
+                $listCagnotte[] = $Cagnotte->getArray();
+            }
+            unset($data, $Cagnotte);
+        }
+        unset($res);
+
+        return $listCagnotte;
+    }
+
+    /**
      * Chargement de tout les cagnottes
      * 
      * @return array $listCagnotte
@@ -47,7 +84,7 @@ class CagnotteManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $Cagnotte = new Cagnotte($data);
-                $listCagnotte[] = $Cagnotte->getArray();
+                $listCagnotte[$Cagnotte->getIdUser()][] = $Cagnotte->getArray();
             }
             unset($data, $Cagnotte);
         }

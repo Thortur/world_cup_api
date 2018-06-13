@@ -208,4 +208,87 @@ class CotesManagerMYSQL {
 
         return $Db::$_nbLigne;
     }
+
+    
+    /**
+     * update de la cagotte
+     * 
+     * @param Cotes $cotes
+     * @return int nb ligne
+     */
+    public static function updateCagnotte(Cotes $Cotes) {
+        $Db = Database::init();
+        //$req = "INSERT INTO cotes (idGroupeCotes, idMatch, idTypePari, idTeam, cote, date) VALUES (:idGroupeCotes, :idMatch, :idTypePari, :idTeam, :cote, :date);";
+        $data = array(
+            ':idGroupeCotes' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdGroupeCotes(),
+            ),
+            ':idMatch' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdMatch(),
+            ),
+            ':idTypePari' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdTypePari(),
+            ),
+            ':idTeam' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdTeam(),
+            ),
+            ':cote' => array(
+                'type'  => 'float',
+                'value' => $Cotes->getCote(),
+            ),
+            ':date' => array(
+                'type'  => 'string',
+                'value' => $Cotes->getDate()->format('Y-m-d H:i:s'),
+            ),
+        );
+        
+        $Db->execStatement($req, $data);
+        unset($req, $data, $Cotes);
+
+        return $Db::$_nbLigne;
+    }
+
+    /**
+     * Check si la cotes est valid
+     * 
+     * @param Cotes $Cotes
+     * @return bool $valid
+     */
+    public static function isCotesValide(Cotes $Cotes) {
+        $Db = Database::init();
+        $valid = false;
+        $req = "SELECT
+                    cotes.id
+                FROM cotes
+                WHERE
+                    cotes.id = :idCotes
+                    AND cotes.idMatch = :idMatch
+                    AND cotes.idTypePari = :idTypePari
+                ORDER BY cotes.date ASC, cotes.idTeam
+                LIMIT 1;";
+        $data = array(
+            ':idCotes' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getId(),
+            ),
+            ':idMatch' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdMatch(),
+            ),
+            ':idTypePari' => array(
+                'type'  => 'int',
+                'value' => $Cotes->getIdTypePari(),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+        unset($req, $data);
+        if(empty($res) === false) {
+            $valid = true;
+        }
+        return $valid;
+    }
 }

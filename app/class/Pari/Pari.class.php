@@ -41,6 +41,12 @@ class Pari {
      */
     private $montant;
     /**
+     * gain du pari
+     * 
+     * @var float
+     */
+    private $gain;
+    /**
      * date du pari
      * 
      * @var DateTime
@@ -59,6 +65,7 @@ class Pari {
         $this->setIdUser((int)$data['idUser']);
         $this->setIdCotes((int)$data['idCotes']);
         $this->setMontant((float)$data['montant']);
+        $this->setGain((float)$data['gain']);
         $this->setDate($data['date']);
     }
 
@@ -73,6 +80,7 @@ class Pari {
             'idUser'     => $this->getIdUser(),
             'idCotes'    => $this->getIdCotes(),
             'montant'    => $this->getMontant(),
+            'gain'       => $this->getGain(),
             'date'       => $this->getDate()->format('Y-m-d H:i:s'),
         );
     }
@@ -217,6 +225,30 @@ class Pari {
     public function setMontant(float $montant)
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+    
+    /**
+     * Get gain du pari
+     *
+     * @return  float
+     */ 
+    public function getGain()
+    {
+        return $this->gain;
+    }
+
+    /**
+     * Set gain du pari
+     *
+     * @param  float  $gain  gain du pari
+     *
+     * @return  self
+     */ 
+    public function setGain(float $gain)
+    {
+        $this->gain = $gain;
 
         return $this;
     }
