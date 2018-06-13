@@ -31,6 +31,14 @@ class User {
      */
     private $pseudo;
     /**
+     * sexe user
+     * 0 = homme
+     * 1 = femme
+     *
+     * @var bool
+     */
+    private $sexe;
+    /**
      * mail user
      *
      * @var string
@@ -73,6 +81,7 @@ class User {
         $this->setNom((string)$data['nom']);
         $this->setPrenom((string)$data['prenom']);
         $this->setPseudo((string)$data['pseudo']);
+        $this->setSexe((string)$data['sexe']);
         $this->setMail((string)$data['mail']);
         $this->setPassword((string)$data['password']);
         $this->setMailConfirm((bool)$data['mailConfirm']);
@@ -91,6 +100,7 @@ class User {
             'nom'         => $this->getNom(),
             'prenom'      => $this->getPrenom(),
             'pseudo'      => $this->getPseudo(),
+            'sexe'        => $this->getSexe(),
             'mail'        => $this->getMail(),
             'mailConfirm' => $this->isMailConfirm(),
         );
@@ -187,6 +197,30 @@ class User {
     public function setPseudo(string $pseudo)
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * Get 1 = femme
+     *
+     * @return  bool
+     */ 
+    public function getSexe()
+    {
+        return $this->sexe;
+    }
+
+    /**
+     * Set 1 = femme
+     *
+     * @param  bool  $sexe  1 = femme
+     *
+     * @return  self
+     */ 
+    public function setSexe(bool $sexe)
+    {
+        $this->sexe = $sexe;
 
         return $this;
     }

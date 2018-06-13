@@ -39,7 +39,7 @@ class UserManagerMYSQL {
      */
     public static function insertUser(User $User) {
         $Db = Database::init();
-        $req = "INSERT INTO user (nom, prenom, pseudo, mail, password) VALUES (:nom, :prenom, :pseudo, :mail, :password);";
+        $req = "INSERT INTO user (nom, prenom, pseudo, sexe, mail, password) VALUES (:nom, :prenom, :pseudo, :sexe, :mail, :password);";
         $data = array(
                     ':nom' => array(
                         'type'  => 'string',
@@ -52,6 +52,10 @@ class UserManagerMYSQL {
                     ':pseudo' => array(
                         'type'  => 'string',
                         'value' => $User->getPseudo(),
+                    ),
+                    ':pseudo' => array(
+                        'type'  => 'bool',
+                        'value' => $User->getSexe(),
                     ),
                     ':mail' => array(
                         'type'  => 'string',
@@ -77,7 +81,7 @@ class UserManagerMYSQL {
      */
     public static function updateUser(User $User) {
         $Db = Database::init();
-        $req = "UPDATE user SET nom = :nom, prenom = :prenom, pseudo = :pseudo, mail = :mail WHERE id = :id;";
+        $req = "UPDATE user SET nom = :nom, prenom = :prenom, pseudo = :pseudo, sexe = :sexe, mail = :mail WHERE id = :id;";
         $data = array(
             ':nom' => array(
                 'type'  => 'string',
@@ -90,6 +94,10 @@ class UserManagerMYSQL {
             ':pseudo' => array(
                 'type'  => 'string',
                 'value' => $User->getPseudo(),
+            ),
+            ':sexe' => array(
+                'type'  => 'bool',
+                'value' => $User->getSexe(),
             ),
             ':mail' => array(
                 'type'  => 'string',
