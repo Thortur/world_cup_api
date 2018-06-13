@@ -117,7 +117,8 @@ class SendRequete {
         $response = curl_exec($ch);
         curl_close($ch);
         unset($ch);
-        
+        echo $response;
+        die;
         if(empty($response) === false) {
             try {
                 $response = \json_decode($response);

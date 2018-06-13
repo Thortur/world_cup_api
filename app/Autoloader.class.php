@@ -46,7 +46,7 @@ class Autoloader {
             foreach($listDossier as $nameDir) {
                 if(in_array($nameDir, array('.','..')) === false) {
                     if(is_dir($nameDir) === false) {
-                        if(in_array($nameDir,array($class.'.php', $class.'.class.php', $class.'.interface.php'))) {
+                        if(in_array($nameDir,array($class.'.php', $class.'.trait.php', $class.'.class.php', $class.'.interface.php'))) {
                             require_once $chemin.$nameDir;
                         }
                     }

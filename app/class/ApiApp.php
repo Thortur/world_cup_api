@@ -270,6 +270,7 @@ class ApiApp extends ApiRest {
             'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
             'listCotes'             => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
             'listPari'              => \Pari\PariManagerMYSQL::loadListAllPari(),
+            'listCagnotte'          => \Cagnotte\CagnotteManagerMYSQL::loadAllCagnotte(),
         );
         
         if(empty($tabReturn) === false) {
@@ -297,34 +298,62 @@ class ApiApp extends ApiRest {
     /**
      * Retourne les data primiere pour la page dashboard
      */
-    private function insertPari() {
-        $Pari = new \Pari\Pari(array(
-            'id'         => -1,
-            'idMatch'    => $this->requestData['idMatch'],
-            'idTypePari' => $this->requestData['idTypePari'],
-            'idUser'     => $this->requestData['idUser'],
-            'idCotes'    => $this->requestData['idCotes'],
-            'montant'    => $this->requestData['montant'],
-            'date'       => $this->requestData['date'],
+    private function insertPari() {        
+        $Cotes = new \Cotes\Cotes(array(
+            'id'            => $this->requestData['idCotes'],
+            'idGroupeCotes' => -1,
+            'idMatch'       => $this->requestData['idMatch'],
+            'idTypePari'    => $this->requestData['idTypePari'],
+            'idTeam'        => -1,
+            'cote'          => -1,
+            'date'          => '',
         ));
-        
-        $idPari = \Pari\PariManagerMYSQL::isDejaPariMatch($Pari);
-        $Pari->setId($idPari);
-        if($Pari->getId() === -1) {
-            $Pari = \Pari\PariManagerMYSQL::insertPari($Pari);
-        }
-        else {
-            $Pari = \Pari\PariManagerMYSQL::updatePari($Pari); 
-        }
 
 
-        $Cagnotte = new \Cagnotte\Cagnotte(array(
-            'idUser'  => $this->requestData['idUser'],
-            'idPari'  => $Pari->getId(),
-            'date'    => $this->requestData['date'],
-            'montant' => $this->requestData['montant'],
-        ));
-        \Cagnotte\CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
+        if(\Cotes\CotesManagerMYSQL::isCotesValide($Cotes) === true && empty($this->requestData['montant']) === false) {
+
+            $montant         = (float)$this->requestData['montant'];
+            $listCagnotte    = \Cagnotte\CagnotteManagerMYSQL::loadCagnotteUser((int)$this->requestData['idUser']);
+            $montantCagnotte = \Cagnotte\CagnotteManager::getCagnottesUser($listCagnotte);
+            
+            if($montant <= $montantCagnotte) {
+                $Pari = new \Pari\Pari(array(
+                    'id'         => -1,
+                    'idMatch'    => $this->requestData['idMatch'],
+                    'idTypePari' => $this->requestData['idTypePari'],
+                    'idUser'     => $this->requestData['idUser'],
+                    'idCotes'    => $this->requestData['idCotes'],
+                    'montant'    => $this->requestData['montant'],
+                    'gain'       => 0,
+                    'date'       => $this->requestData['date'],
+                ));
+    
+                $idPari = \Pari\PariManagerMYSQL::isDejaPariMatch($Pari);
+                $Pari->setId($idPari);
+                if($Pari->getId() === -1) {
+                    $Pari = \Pari\PariManagerMYSQL::insertPari($Pari);
+                    $Cagnotte = new \Cagnotte\Cagnotte(array(
+                        'idUser'  => $this->requestData['idUser'],
+                        'idPari'  => $Pari->getId(),
+                        'date'    => $this->requestData['date'],
+                        'montant' => $this->requestData['montant'] * -1,
+                    ));
+                    \Cagnotte\CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
+                }
+                else {
+                    /*
+                    $Pari = \Pari\PariManagerMYSQL::updatePari($Pari); 
+                    $Cagnotte = new \Cagnotte\Cagnotte(array(
+                        'idUser'  => $this->requestData['idUser'],
+                        'idPari'  => $Pari->getId(),
+                        'date'    => $this->requestData['date'],
+                        'montant' => $this->requestData['montant'] * -1,
+                    ));
+                    \Cagnotte\CagnotteManagerMYSQL::updateCagnotte($Cagnotte);
+                    */
+                }
+            }
+        }
         
         if(empty($listPari) === false) {
             $this->response($this->json($listPari), 200);
