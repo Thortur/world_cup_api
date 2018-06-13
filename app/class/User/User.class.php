@@ -31,13 +31,11 @@ class User {
      */
     private $pseudo;
     /**
-     * sexe user
-     * 0 = homme
-     * 1 = femme
+     * avatar user
      *
-     * @var bool
+     * @var int
      */
-    private $sexe;
+    private $avatar;
     /**
      * mail user
      *
@@ -81,7 +79,7 @@ class User {
         $this->setNom((string)$data['nom']);
         $this->setPrenom((string)$data['prenom']);
         $this->setPseudo((string)$data['pseudo']);
-        $this->setSexe((string)$data['sexe']);
+        $this->setAvatar((int)$data['avatar']);
         $this->setMail((string)$data['mail']);
         $this->setPassword((string)$data['password']);
         $this->setMailConfirm((bool)$data['mailConfirm']);
@@ -100,7 +98,7 @@ class User {
             'nom'         => $this->getNom(),
             'prenom'      => $this->getPrenom(),
             'pseudo'      => $this->getPseudo(),
-            'sexe'        => $this->getSexe(),
+            'avatar'      => $this->getAvatar(),
             'mail'        => $this->getMail(),
             'mailConfirm' => $this->isMailConfirm(),
         );
@@ -206,21 +204,21 @@ class User {
      *
      * @return  bool
      */ 
-    public function getSexe()
+    public function getAvatar()
     {
-        return $this->sexe;
+        return $this->avatar;
     }
 
     /**
-     * Set 1 = femme
+     * Set avatar
      *
-     * @param  bool  $sexe  1 = femme
+     * @param  bool  $avatar
      *
      * @return  self
      */ 
-    public function setSexe(bool $sexe)
+    public function setAvatar(int $avatar)
     {
-        $this->sexe = $sexe;
+        $this->avatar = $avatar;
 
         return $this;
     }
