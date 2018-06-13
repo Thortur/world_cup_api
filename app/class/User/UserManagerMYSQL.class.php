@@ -244,7 +244,19 @@ class UserManagerMYSQL {
             $password = self::encodePassWord($password);
             $req = "UPDATE user SET password = '".$password."' WHERE id = '".$res[0]['id']."';";
             $Db->exec($req);
-            mail($res[0]['mail'], 'Pari entre amis - Chagement de mot de passe', 'Votre nouveau mot de passe est : '.$password);
+            // mail($res[0]['mail'], 'Pari entre amis - Chagement de mot de passe', 'Votre nouveau mot de passe est : '.$password);
+            // 
+            $SendMail = new \SendMail\SendMail(array(
+                'mailAuto' => true,
+                'destinataire' => array(
+                    'mail' => $res[0]['mail'],
+                    'nom'  => $res[0]['pseudo'],
+                ),
+                'subject' => "Chagement de mot de passe",
+                'body'    => "Bonjour,<br/>\n<br/>\nVous avez perdu votre mot de passe...<br/>\nBon c'est pour moi, voici ton nouveau mot de passe : ".$password."<br/>\n<br/>\nSupport.",
+                'altBody' => '',
+            ));
+            $SendMail->send();
             unset($password, $req);
         }
         unset($res);
