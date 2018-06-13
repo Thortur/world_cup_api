@@ -57,6 +57,7 @@ class ApiApp extends ApiRest {
             'nom'      => '',
             'prenom'   => '',
             'pseudo'   => (string)$this->requestData['pseudo'],
+            'avatar'   => -1,
             'mail'     => '',
             'password' => (string)$this->requestData['password'],
             'dataUser' => array(),
@@ -83,6 +84,7 @@ class ApiApp extends ApiRest {
             'nom'      => (string)$this->requestData['nom'],
             'prenom'   => (string)$this->requestData['prenom'],
             'pseudo'   => (string)$this->requestData['pseudo'],
+            'avatar'   => (int)$this->requestData['avatar'],
             'mail'     => (string)$this->requestData['mail'],
             'password' => (string)$this->requestData['password'],
             'dataUser' => array(),
@@ -108,6 +110,7 @@ class ApiApp extends ApiRest {
                 'nom'      => '',
                 'prenom'   => '',
                 'pseudo'   => '',
+                'avatar'   => -1,
                 'mail'     => (string)$this->requestData['mail'],
                 'password' => '',
                 'dataUser' => array()
