@@ -20,7 +20,7 @@ class GroupeUserDetailManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $GroupeUserDetail = new GroupeUserDetail($data);
-                $listGroupUserDetail[$GroupeUserDetail->getId()][$GroupeUserDetail->getIdUser()] = $GroupeUserDetail->getArray();
+                $listGroupUserDetail[$GroupeUserDetail->getIdGroupeUser()][$GroupeUserDetail->getIdUser()] = $GroupeUserDetail->getArray();
             }
             unset($data, $GroupeUserDetail);
         }

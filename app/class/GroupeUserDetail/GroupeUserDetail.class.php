@@ -30,7 +30,7 @@ class GroupeUserDetail {
     public function __construct(array $data) {
         $this->setId((int)$data['id']);
         $this->setIdGroupeUser((int)$data['idGroupeUser']);
-        $this->setIdUser((int)$data['ordre']);
+        $this->setIdUser((int)$data['idUser']);
     }
     
     /**

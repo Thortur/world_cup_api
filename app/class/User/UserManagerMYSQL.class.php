@@ -6,6 +6,43 @@ include_once 'User.class.php';
 include_once 'DataUser.class.php';
 
 class UserManagerMYSQL {
+    /**
+     * Chargement des infos d'un User
+     * 
+     * @param int $idUser
+     * @param User $USer
+     */
+    public static function loadUser(int $idUser) {
+        
+        $Db = Database::init();
+        $req = "SELECT
+                    *
+                FROM user
+                WHERE user.id = :idUser";
+        $data = array(
+            ':idUser' => array(
+                'type'  => 'int',
+                'value' => $idUser,
+            )
+        );
+        $res = $Db->execStatement($req, $data);
+        if(empty($res) === false) {
+            $User = new User($res[0]);
+        }
+        else {
+            $User = new User(array(
+                'id'          => -1,
+                'nom'         => '',
+                'prenom'      => '',
+                'pseudo'      => '',
+                'avatar'      => '',
+                'mail'        => '',
+                'mailConfirm' => false
+            ));
+        }
+        
+        return $User;
+    }
 
     /**
      * Retourne la list complete des utilisateurs
@@ -22,7 +59,8 @@ class UserManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $data['id'] = (int)$data['id'];
-                $listUser[$data['id']] = new User($data);
+                $User = new User($data);
+                $listUser[$data['id']] = $User->getArray();
             }
             unset($data);
         }

@@ -41,8 +41,6 @@ class Autoloader {
      * Code 
      */
     public static function autoload($chemin, $class, $trouvee) {
-        
-       
         $listDossier = scandir($chemin);
         if(is_array($listDossier) === true) {
             foreach($listDossier as $nameDir) {
