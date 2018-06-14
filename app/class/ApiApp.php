@@ -231,7 +231,7 @@ class ApiApp extends ApiRest {
      * Retourne la list des user par groupe
      */
     private function loadListAllGroupeUserDetail() {
-        $listGroupeUserDetail = \GroupeUser\GroupeUserDetailManagerMYSQL::loadListAllGroupeUserDetail();
+        $listGroupeUserDetail = \GroupeUserDetail\GroupeUserDetailManagerMYSQL::loadListAllGroupeUserDetail();
         if(empty($listGroupeUserDetail) === false) {
             $this->response($this->json($listGroupeUserDetail), 200);
         }
@@ -471,6 +471,19 @@ class ApiApp extends ApiRest {
         $listUser  = \User\UserManagerMYSQL::loadListAllUser();
         if(empty($listUser) === false) {
             $this->response($this->json($listUser), 200);
+        }
+        else {
+            $this->response('', 204); 
+        }
+    }
+
+    /**
+     * Chargement des infos d'un utilisateur en fonction de son idUser
+     */
+    private function loadUser() {
+        $user  = \User\UserManagerMYSQL::loadUser((int)$this->requestData['idUser']);
+        if(empty($user) === false) {
+            $this->response($this->json($user), 200);
         }
         else {
             $this->response('', 204); 
