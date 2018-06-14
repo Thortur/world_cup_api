@@ -28,4 +28,33 @@ class ResultatManagerMYSQL {
         unset($res);
         return $listResultat;
     }
+
+    /**
+     * insert dans la base le resultat du match par équipe
+     *
+     * @param Resultat $Resultat
+     * @return Resultat $Resultat
+     */
+    public static function insertResultat(Resultat $Resultat) {
+        $Db = Database::init();
+        $req = "INSERT INTO resultat (idMatch, idTeam, score) VALUES (:idMatch, :idTeam, :score);";
+        $data = array(
+            ':idMatch' => array(
+                'type'  => 'int',
+                'value' => $Resultat->getIdMatch(),
+            ),
+            ':idTeam' => array(
+                'type'  => 'int',
+                'value' => $Resultat->getIdTeam(),
+            ),
+            ':score' => array(
+                'type'  => 'int',
+                'value' => $Resultat->getScore(),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+        unset($req, $data);
+        $Resultat->setId($Db->getLastInsertId());
+        return $Resultat;
+    }
 }

@@ -2,7 +2,9 @@
 declare(strict_types = 1);
 namespace Pari;
 use \Connexion\Database;
+use \Match\Match;
 include_once 'Pari.class.php';
+include_once 'PariManager.class.php';
 
 class PariManagerMYSQL {
 
@@ -18,6 +20,38 @@ class PariManagerMYSQL {
                     *
                 FROM pari";
         $res = $Db->exec($req);
+        if(is_array($res) === true && empty($res) === false) {
+            foreach($res as $data) {
+                $Pari = new Pari($data);
+                $listPari[] = $Pari->getArray();
+            }
+            unset($data, $Pari);
+        }
+        unset($res);
+        return $listPari;
+    }
+
+    /**
+     * Retourne la liste des pari pour un idMatch
+     * 
+     * @param Match $Match
+     * @return array $listPari
+     */
+    public static function loadListPariForMatch(Match $Match) {
+        $listPari = array();
+        $Db = Database::init();
+        $req = "SELECT
+                    *
+                FROM pari
+                WHERE
+                    pari.idMatch = :idMatch";
+        $data = array(
+        ':idMatch' => array(
+                'type'  => 'int',
+                'value' => $Match->getId(),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $Pari = new Pari($data);
@@ -72,7 +106,7 @@ class PariManagerMYSQL {
      * Insert un nouveau parisur un match
      * 
      * @param Pari $Pari
-     * @return int nb ligne
+     * @return Pari $Pari
      */
     public static function insertPari(Pari $Pari) {
         $Db = Database::init();
@@ -116,7 +150,7 @@ class PariManagerMYSQL {
      * Mise a jour d'un pari
      * 
      * @param Pari $Pari
-     * @return int nbligne
+     * @return Pari $Pari
      */
     public static function updatePari(Pari $Pari) {
         $Db = Database::init();
@@ -148,6 +182,38 @@ class PariManagerMYSQL {
             ),
         );
         
+        $Db->execStatement($req, $data);
+        unset($req, $data);
+        return $Pari;
+    }
+
+    /**
+     * Mise a jour du gain du pari
+     * 
+     * @param Pari $Pari
+     * @return Pari $Pari
+     */
+    public static function updateGain(Pari $Pari) {
+        $Db = Database::init();
+        $req = "UPDATE pari SET gain = :gain WHERE idMatch = :idMatch AND idTypePari = :idTypePari AND idUser = :idUser";
+        $data = array(
+            ':gain' => array(
+                'type'  => 'float',
+                'value' => $Pari->getGain(),
+            ),
+            ':idMatch' => array(
+                'type'  => 'int',
+                'value' => $Pari->getIdMatch(),
+            ),
+            ':idTypePari' => array(
+                'type'  => 'int',
+                'value' => $Pari->getIdTypePari(),
+            ),
+            ':idUser' => array(
+                'type'  => 'int',
+                'value' => $Pari->getIdUser(),
+            ),
+        );
         $Db->execStatement($req, $data);
         unset($req, $data);
         return $Pari;
