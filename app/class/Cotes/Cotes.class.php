@@ -73,7 +73,7 @@ class Cotes {
             'idTypePari'    => $this->getIdTypePari(),
             'idTeam'        => $this->getIdTeam(),
             'cote'          => $this->getCote(),
-            'date'          => $this->getDate()->format('Y-m-d Hi:i:s'),
+            'date'          => $this->getDate()->format('Y-m-d H:i:s'),
         );
     }
 

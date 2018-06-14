@@ -12,7 +12,7 @@ class UserManagerMYSQL {
      *
      * @return array listUser
      */
-    public static function loadListAllTeam() {
+    public static function loadListAllUser() {
         $listUser = array();
         $Db = Database::init();
         $req = "SELECT
@@ -22,7 +22,7 @@ class UserManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $data['id'] = (int)$data['id'];
-                $listUser[] = new User($data);
+                $listUser[$data['id']] = new User($data);
             }
             unset($data);
         }
@@ -244,8 +244,7 @@ class UserManagerMYSQL {
             $password = self::encodePassWord($password);
             $req = "UPDATE user SET password = '".$password."' WHERE id = '".$res[0]['id']."';";
             $Db->exec($req);
-            // mail($res[0]['mail'], 'Pari entre amis - Chagement de mot de passe', 'Votre nouveau mot de passe est : '.$password);
-            // 
+            
             $SendMail = new \SendMail\SendMail(array(
                 'mailAuto' => true,
                 'destinataire' => array(
@@ -257,7 +256,7 @@ class UserManagerMYSQL {
                 'altBody' => '',
             ));
             $SendMail->send();
-            unset($password, $req);
+            unset($password, $req, $SendMail);
         }
         unset($res);
     }

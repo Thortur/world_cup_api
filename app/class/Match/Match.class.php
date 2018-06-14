@@ -16,17 +16,29 @@ class Match {
      */
     private $date;
     /**
-     * id Team a
+     * id Team A
      *
      * @var int
      */
     private $teamA;
+    /**
+     * score de la team A
+     *
+     * @var int
+     */
+    private $scoreTeamA;
     /**
      * id Team B
      *
      * @var int
      */
     private $teamB;
+    /**
+     * score de la team B
+     *
+     * @var int
+     */
+    private $scoreTeamB;
     /**
      * id type de match
      *
@@ -39,6 +51,12 @@ class Match {
      * @var int
      */
     private $idGroupeMatch;
+    /**
+     * id du vainqueur
+     *
+     * @var int
+     */
+    private $idVainqueur;
 
     /**
      * Construct
@@ -49,9 +67,12 @@ class Match {
         $this->setId((int)$data['id']);
         $this->setDate($data['date']);
         $this->setTeamA((int)$data['teamA']);
+        $this->setScoreTeamA((int)$data['scoreTeamA']);
         $this->setTeamB((int)$data['teamB']);
+        $this->setScoreTeamB((int)$data['scoreTeamB']);
         $this->setIdTypeMatch((int)$data['idTypeMatch']);
         $this->setIdGroupeMatch((int)$data['idGroupeMatch']);
+        $this->setIdVainqueur();
     }
 
     /**
@@ -91,9 +112,12 @@ class Match {
             'id'            => $this->getId(),
             'date'          => $this->getDate()->format('Y-m-d H:i:s'),
             'teamA'         => $this->getTeamA(),
+            'scoreTeamA'    => $this->getScoreTeamA(),
             'teamB'         => $this->getTeamB(),
+            'scoreTeamB'    => $this->getScoreTeamB(),
             'idTypeMatch'   => $this->getIdTypeMatch(),
             'idGroupeMatch' => $this->getIdGroupeMatch(),
+            'idVainqueur'   => $this->getIdVainqueur(),
         );
     }
 
@@ -150,8 +174,10 @@ class Match {
         return $this;
     }
 
+    
+
     /**
-     * Get id Team a
+     * Get id Team A
      *
      * @return  int
      */ 
@@ -161,15 +187,39 @@ class Match {
     }
 
     /**
-     * Set id Team a
+     * Set id Team A
      *
-     * @param  int  $teamA  id Team a
+     * @param  int  $teamA  id Team A
      *
      * @return  self
      */ 
     public function setTeamA(int $teamA)
     {
         $this->teamA = $teamA;
+
+        return $this;
+    }
+
+    /**
+     * Get score de la team A
+     *
+     * @return  int
+     */ 
+    public function getScoreTeamA()
+    {
+        return $this->scoreTeamA;
+    }
+
+    /**
+     * Set score de la team A
+     *
+     * @param  int  $scoreTeamA  score de la team A
+     *
+     * @return  self
+     */ 
+    public function setScoreTeamA(int $scoreTeamA)
+    {
+        $this->scoreTeamA = $scoreTeamA;
 
         return $this;
     }
@@ -194,6 +244,30 @@ class Match {
     public function setTeamB(int $teamB)
     {
         $this->teamB = $teamB;
+
+        return $this;
+    }
+
+    /**
+     * Get score de la team B
+     *
+     * @return  int
+     */ 
+    public function getScoreTeamB()
+    {
+        return $this->scoreTeamB;
+    }
+
+    /**
+     * Set score de la team B
+     *
+     * @param  int  $scoreTeamB  score de la team B
+     *
+     * @return  self
+     */ 
+    public function setScoreTeamB(int $scoreTeamB)
+    {
+        $this->scoreTeamB = $scoreTeamB;
 
         return $this;
     }
@@ -242,6 +316,36 @@ class Match {
     public function setIdGroupeMatch(int $idGroupeMatch)
     {
         $this->idGroupeMatch = $idGroupeMatch;
+
+        return $this;
+    }
+
+    /**
+     * Get id du vainqueur
+     *
+     * @return  int
+     */ 
+    public function getIdVainqueur()
+    {
+        return $this->idVainqueur;
+    }
+
+    /**
+     * Set id du vainqueur
+     *
+     * @return  self
+     */ 
+    public function setIdVainqueur()
+    {
+        if($this->getScoreTeamA() > $this->getScoreTeamB()) {
+            $this->idVainqueur = $this->getTeamA();
+        }
+        else if($this->getScoreTeamA() < $this->getScoreTeamB()) {
+            $this->idVainqueur = $this->getTeamB();
+        }
+        else {
+            $this->idVainqueur = 0;
+        }
 
         return $this;
     }

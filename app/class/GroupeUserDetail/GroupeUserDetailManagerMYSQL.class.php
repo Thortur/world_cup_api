@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace GroupeUser;
+namespace GroupeUserDetail;
 use \Connexion\Database;
 include_once 'GroupeUserDetail.class.php';
 
@@ -20,7 +20,7 @@ class GroupeUserDetailManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $GroupeUserDetail = new GroupeUserDetail($data);
-                $listGroupUserDetail[] = $GroupeUserDetail->getArray();
+                $listGroupUserDetail[$GroupeUserDetail->getId()][$GroupeUserDetail->getIdUser()] = $GroupeUserDetail->getArray();
             }
             unset($data, $GroupeUserDetail);
         }
