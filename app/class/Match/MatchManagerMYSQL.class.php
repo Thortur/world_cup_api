@@ -21,12 +21,40 @@ class MatchManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $Match = new Match($data);
-                $listMatch[] = $Match->getArray();
+                $listMatch[$Match->getId()] = $Match->getArray();
             }
             unset($data, $Match);
         }
         unset($res);
 
         return $listMatch;
+    }
+     /**
+     * Retourne des datas sur le match
+     * 
+     * @param int $idMatch
+     * @return Match $Match
+     */
+    public static function loadMatch(int $idMatch) {
+        $Match = false;
+        $Db = Database::init();
+        $req = "SELECT
+                    *
+                FROM `match`
+                WHERE `match`.id = :idMatch;";
+        $data = array(
+            ':idMatch' => array(
+                'type' => 'int',
+                'value' => $idMatch,
+            ),
+            
+        );
+        $res = $Db->execStatement($req, $data);
+        if(is_array($res) === true && empty($res) === false) {
+            $Match = new Match($res[0]); 
+        }
+        unset($res);
+
+        return $Match;
     }
 }

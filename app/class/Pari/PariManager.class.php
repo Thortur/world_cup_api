@@ -11,7 +11,7 @@ use \Cotes\Cotes;
 
 class PariManager {
 
-    public static function calculGain(User $User, Match $Match, Pari $Pari, Cotes $Cotes) {
+    public static function calculGain(User $User, Match $Match, Pari $Pari, Cotes $Cotes, array $listTeam) {
         $dateNow = new DateTime();
         $montant = 0;
         if($Cotes->getIdTeam() === $Match->getIdVainqueur()) {
@@ -35,9 +35,10 @@ class PariManager {
                 'mail' => $User->getMail(),
                 'nom'  => $User->getPseudo(),
             ),
-            'subject' => "Un match viens de se terminer, quel son vos gains?",
-            'body'    => "Bonjour,<br/>\n<br/>\nLe montant de votre gains est de ".$montant." € (Attention, c'est pas pour de vrai...) <br/>\n<br/>\nSupport.",
+            'subject' => "Le coup de sifflet final du match ".$listTeam[$Match->getTeamA()].' - '.$listTeam[$Match->getTeamB()]." a retenti dans le stade, quels sont vos gains?",
+            'body'    => "Bonjour,<br/>\n<br/>\nLe montant de votre gain est de ".$montant." € (Attention, c'est pas pour de vrai...) <br/>\n<br/>\nLe support.",
             'altBody' => '',
         ));
+        $SendMail->send();
     }
 }
