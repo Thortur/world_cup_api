@@ -292,6 +292,7 @@ class ApiApp extends ApiRest {
             'listUser'              => \User\UserManagerMYSQL::loadListAllUser(),
             'listGroupeUser'        => \GroupeUser\GroupeUserManagerMYSQL::loadListAllGroupeUser(),
             'listGroupeUserDetail'  => \GroupeUserDetail\GroupeUserDetailManagerMYSQL::loadListAllGroupeUserDetail(),
+            'listResultat'          => \Resultat\ResultatManagerMYSQL::loadListAllResultat(),
         );
         
         if(empty($tabReturn) === false) {
@@ -405,58 +406,65 @@ class ApiApp extends ApiRest {
      * save resultat match
      */
     private function saveResultatMatch() {
+        $retoure = false;
         if(empty($this->requestData['idMatch']) === false
         && empty($this->requestData['idTeamA']) === false
         && (empty($this->requestData['scoreTeamA']) === false || (int)$this->requestData['scoreTeamA'] === 0)
         && empty($this->requestData['idTeamB']) === false
         && (empty($this->requestData['scoreTeamB']) === false || (int)$this->requestData['scoreTeamB'] === 0)) {
-            //creation de l'objet Match
-            $Match = new \Match\Match(array(
-                'id'            => $this->requestData['idMatch'],
-                'date'          => '',
-                'teamA'         => $this->requestData['idTeamA'],
-                'scoreTeamA'    => $this->requestData['scoreTeamA'],
-                'teamB'         => $this->requestData['idTeamB'],
-                'scoreTeamB'    => $this->requestData['scoreTeamB'],
-                'idTypeMatch'   => '',
-                'idGroupeMatch' => '',
-            ));
 
-            //Team A
-            $Resultat = new \Resultat\Resultat(array(
-                'id'      => -1,
-                'idMatch' => $Match->getId(),
-                'idTeam'  => $Match->getTeamA(),
-                'score'   => $Match->getScoreTeamA(),
-            ));
-            \Resultat\ResultatManagerMYSQL::insertResultat($Resultat);
-            
-            //Team B
-            $Resultat = new \Resultat\Resultat(array(
-                'id'      => -1,
-                'idMatch' => $Match->getId(),
-                'idTeam'  => $Match->getTeamB(),
-                'score'   => $Match->getScoreTeamB(),
-            ));
-            \Resultat\ResultatManagerMYSQL::insertResultat($Resultat);
-            unset($Resultat);
+            $listResultat = \Resultat\ResultatManagerMYSQL::loadListAllResultat();
+            if(empty($listResultat[$this->requestData['idMatch']]) === true) {
+                //creation de l'objet Match
+                $Match = new \Match\Match(array(
+                    'id'            => $this->requestData['idMatch'],
+                    'date'          => '',
+                    'teamA'         => $this->requestData['idTeamA'],
+                    'scoreTeamA'    => $this->requestData['scoreTeamA'],
+                    'teamB'         => $this->requestData['idTeamB'],
+                    'scoreTeamB'    => $this->requestData['scoreTeamB'],
+                    'idTypeMatch'   => '',
+                    'idGroupeMatch' => '',
+                ));
 
-            $listPari  = \Pari\PariManagerMYSQL::loadListPariForMatch($Match);
-            $listCotes = \Cotes\CotesManagerMYSQL::loadAllCotes();
-            $listUser  = \User\UserManagerMYSQL::loadListAllUser();
-            $listTeam  = \Team\TeamManagerMYSQL::loadListAllTeam();
+                //Team A
+                $Resultat = new \Resultat\Resultat(array(
+                    'id'      => -1,
+                    'idMatch' => $Match->getId(),
+                    'idTeam'  => $Match->getTeamA(),
+                    'score'   => $Match->getScoreTeamA(),
+                ));
+                \Resultat\ResultatManagerMYSQL::insertResultat($Resultat);
+                
+                //Team B
+                $Resultat = new \Resultat\Resultat(array(
+                    'id'      => -1,
+                    'idMatch' => $Match->getId(),
+                    'idTeam'  => $Match->getTeamB(),
+                    'score'   => $Match->getScoreTeamB(),
+                ));
+                
+                \Resultat\ResultatManagerMYSQL::insertResultat($Resultat);
+                unset($Resultat);
 
-            if(is_array($listPari) === true && empty($listPari) === false) {
-                foreach($listPari as $dataPari) {
-                    $Pari = new \Pari\Pari($dataPari);
-                    $User = new \User\User($listUser[$Pari->getIdUser()]);
-                    if(empty($listCotes[$Pari->getIdCotes()]) === false) {
-                        $Cotes = new \Cotes\Cotes($listCotes[$Pari->getIdCotes()]);
-                        \Pari\PariManager::calculGain($User, $Match, $Pari, $Cotes, $listTeam);
+                $listPari  = \Pari\PariManagerMYSQL::loadListPariForMatch($Match);
+                $listCotes = \Cotes\CotesManagerMYSQL::loadAllCotes();
+                $listUser  = \User\UserManagerMYSQL::loadListAllUser();
+                $listTeam  = \Team\TeamManagerMYSQL::loadListAllTeam();
+
+                if(is_array($listPari) === true && empty($listPari) === false) {
+                    foreach($listPari as $dataPari) {
+                        $Pari = new \Pari\Pari($dataPari);
+                        $User = new \User\User($listUser[$Pari->getIdUser()]);
+                        if(empty($listCotes[$Pari->getIdCotes()]) === false) {
+                            $Cotes = new \Cotes\Cotes($listCotes[$Pari->getIdCotes()]);
+                            \Pari\PariManager::calculGain($User, $Match, $Pari, $Cotes, $listTeam);
+                            $retoure = true;
+                        }
                     }
+                    unset($dataPari);
                 }
-                unset($dataPari);
-            }
+            }          
         }
 
         if(empty($retoure) === false) {
