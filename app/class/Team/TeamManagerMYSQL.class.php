@@ -21,7 +21,7 @@ class TeamManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $Team = new Team($data);
-                $listTeam[] = $Team->getArray();
+                $listTeam[$Team->getId()] = $Team->getArray();
             }
             unset($data, $Team);
         }

@@ -20,7 +20,7 @@ class GroupeMatchManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $GroupeMatch = new GroupeMatch($data);
-                $listGroup[] = $GroupeMatch->getArray();
+                $listGroup[$GroupeMatch->getId()] = $GroupeMatch->getArray();
             }
             unset($data, $GroupeMatch);
         }

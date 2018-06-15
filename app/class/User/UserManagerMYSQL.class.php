@@ -18,7 +18,9 @@ class UserManagerMYSQL {
         $req = "SELECT
                     *
                 FROM user
-                WHERE user.id = :idUser";
+                WHERE
+                    user.id = :idUser
+                    AND user.mailConfirm = 1";
         $data = array(
             ':idUser' => array(
                 'type'  => 'int',
@@ -54,7 +56,9 @@ class UserManagerMYSQL {
         $Db = Database::init();
         $req = "SELECT
                     *
-                FROM user";
+                FROM user
+                WHERE
+                    user.mailConfirm = 1";
         $res =  $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {

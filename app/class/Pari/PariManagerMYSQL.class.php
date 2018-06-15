@@ -23,7 +23,7 @@ class PariManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $Pari = new Pari($data);
-                $listPari[] = $Pari->getArray();
+                $listPari[$Pari->getId()] = $Pari->getArray();
             }
             unset($data, $Pari);
         }
@@ -55,7 +55,7 @@ class PariManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $Pari = new Pari($data);
-                $listPari[] = $Pari->getArray();
+                $listPari[$Pari->getId()] = $Pari->getArray();
             }
             unset($data, $Pari);
         }
