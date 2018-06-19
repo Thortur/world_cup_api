@@ -97,7 +97,7 @@ class SendRequete {
         if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $this->url = 'http://localhost/world_cup_api/public/index.php?request='.$this->getRequete();
         }
-
+        echo $this->url;
         return $this;
     }
 
@@ -117,8 +117,8 @@ class SendRequete {
         $response = curl_exec($ch);
         curl_close($ch);
         unset($ch);
-        echo $response;
-        var_dump($response);
+        echo '000'.$response;
+        // var_dump($response);
         die;
         if(empty($response) === false) {
             try {

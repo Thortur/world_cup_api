@@ -2,6 +2,8 @@
 declare(strict_types = 1);
 namespace User;
 use \Connexion\Database;
+use \DateTime;
+
 include_once 'User.class.php';
 include_once 'DataUser.class.php';
 
@@ -81,7 +83,7 @@ class UserManagerMYSQL {
      */
     public static function insertUser(User $User) {
         $Db = Database::init();
-        $req = "INSERT INTO user (nom, prenom, pseudo, avatar, mail, password) VALUES (:nom, :prenom, :pseudo, :avatar, :mail, :password);";
+        $req = "INSERT INTO user (nom, prenom, pseudo, avatar, mail, password, dateUpdate, newsLetter) VALUES (:nom, :prenom, :pseudo, :avatar, :mail, :password, :dateUpdate, :newsLetter);";
         $data = array(
                     ':nom' => array(
                         'type'  => 'string',
@@ -107,6 +109,14 @@ class UserManagerMYSQL {
                         'type'  => 'string',
                         'value' => self::encodePassWord($User->getPassword()),
                     ),
+                    ':dateUpdate' => array(
+                        'type'  => 'string',
+                        'value' => $User->getDateUpdate()->format('Y-m-d H:i:s'),
+                    ),
+                    ':newsLetter' => array(
+                        'type'  => 'bool',
+                        'value' => $User->isNewsLetter(),
+                    ),
                 );
         $Db->execStatement($req, $data);
         $User->setId($Db->getLastInsertId());
@@ -123,7 +133,7 @@ class UserManagerMYSQL {
      */
     public static function updateUser(User $User) {
         $Db = Database::init();
-        $req = "UPDATE user SET nom = :nom, prenom = :prenom, pseudo = :pseudo, avatar = :avatar, mail = :mail WHERE id = :id;";
+        $req = "UPDATE user SET nom = :nom, prenom = :prenom, pseudo = :pseudo, avatar = :avatar, mail = :mail, dateUpdate = :dateUpdate, newsLetter = :newsLetter, accordRGPD = :accordRGPD WHERE id = :id;";
         $data = array(
             ':nom' => array(
                 'type'  => 'string',
@@ -149,8 +159,21 @@ class UserManagerMYSQL {
                 'type'  => 'int',
                 'value' => $User->getId(),
             ),
+            ':dateUpdate' => array(
+                'type'  => 'string',
+                'value' => $User->getDateUpdate()->format('Y-m-d H:i:s'),
+            ),
+            ':newsLetter' => array(
+                'type'  => 'bool',
+                'value' => $User->isNewsLetter(),
+            ),
+            ':accordRGPD' => array(
+                'type'  => 'bool',
+                'value' => $User->isAccordRGPD(),
+            ),
         );
         $Db->execStatement($req, $data);
+        self::updateAccordRGPDHisto($User);
         unset($req, $data, $User);
 
         return $Db::$_nbLigne;
@@ -164,7 +187,7 @@ class UserManagerMYSQL {
      */
     public static function updatePassWord(User $User) {
         $Db = Database::init();
-        $req = "UPDATE user SET password = :password WHERE id = :id;";
+        $req = "UPDATE user SET password = :password, dateUpdate = :dateUpdate WHERE id = :id;";
         $data = array(
             ':password' => array(
                 'type'  => 'password',
@@ -173,6 +196,10 @@ class UserManagerMYSQL {
             ':id' => array(
                 'type'  => 'int',
                 'value' => $User->getId(),
+            ),
+            ':dateUpdate' => array(
+                'type'  => 'string',
+                'value' => $User->getDateUpdate()->format('Y-m-d H:i:s'),
             ),
         );
         $Db->execStatement($req, $data);
@@ -328,8 +355,10 @@ class UserManagerMYSQL {
      * @return User $User
      */
     public static function confirmMail(int $id, string $mail) {
-        $Db  = Database::init();
-        $req = "UPDATE user SET mailConfirm = 1 WHERE id = :id AND mail = :mail;";
+        $Db      = Database::init();
+        $dateNow = new DateTime();
+
+        $req = "UPDATE user SET mailConfirm = 1, dateUpdate = :dateUpdate WHERE id = :id AND mail = :mail;";
         $data = array(
             ':id' => array(
                 'type'  => 'int',
@@ -338,7 +367,71 @@ class UserManagerMYSQL {
             ':mail' => array(
                 'type'  => 'string',
                 'value' => $mail
-            )
+            ),
+            ':dateUpdate' => array(
+                'type'  => 'string',
+                'value' => $dateNow->format('Y-m-d H:i:s'),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+        
+        return true;
+    }
+
+    /**
+     * update accord RGPD
+     * 
+     * @param User $User
+     */
+    public static function updateAccordRGPD(User $User) {
+        $Db      = Database::init();
+        $dateNow = new DateTime();
+
+        $req = "UPDATE user SET mailConfirm = 1, dateUpdate = :dateUpdate WHERE id = :id;";
+        $data = array(
+            ':id' => array(
+                'type'  => 'int',
+                'value' => $id
+            ),
+            ':accordRGPD' => array(
+                'type'  => 'int',
+                'value' => $User->idaccordRGPD()
+            ),
+            ':dateUpdate' => array(
+                'type'  => 'string',
+                'value' => $dateNow->format('Y-m-d H:i:s'),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+
+        self::updateAccordRGPDHisto($User);
+        
+        return true;
+    }
+
+    /**
+     * update accord RGPD
+     * 
+     * @param User $User
+     */
+    public static function updateAccordRGPDHisto(User $User) {
+        $Db      = Database::init();
+        $dateNow = new DateTime();
+
+        $req = "INSERT INTO userAccordRGPD (idUser, date, accord) VALUES (:idUser, :date, :accordRGPD);";
+        $data = array(
+            ':idUser' => array(
+                'type'  => 'int',
+                'value' => $User->getId(),
+            ),
+            ':date' => array(
+                'type'  => 'string',
+                'value' => $dateNow->format('Y-m-d H:i:s'),
+            ),
+            ':accordRGPD' => array(
+                'type'  => 'int',
+                'value' => $User->idaccordRGPD()
+            ),
         );
         $res = $Db->execStatement($req, $data);
         

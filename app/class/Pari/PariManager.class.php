@@ -29,16 +29,18 @@ class PariManager {
         ));
         CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
 
-        $SendMail = new \SendMail\SendMail(array(
-            'mailAuto' => true,
-            'destinataire' => array(
-                'mail' => $User->getMail(),
-                'nom'  => $User->getPseudo(),
-            ),
-            'subject' => "Le coup de sifflet final du match ".$listTeam[$Match->getTeamA()]['nom'].' - '.$listTeam[$Match->getTeamB()]['nom']." a retenti dans le stade, quels sont vos gains?",
-            'body'    => "Bonjour,<br/>\n<br/>\nLe montant de votre gain est de ".$montant." € (Attention, c'est pas pour de vrai...) <br/>\n<br/>\nLe support.",
-            'altBody' => '',
-        ));
-        $SendMail->send();
+        if($User->isAccordRGPD() === true && $User->isNewsLetter() === true) {
+            $SendMail = new \SendMail\SendMail(array(
+                'mailAuto' => true,
+                'destinataire' => array(
+                    'mail' => $User->getMail(),
+                    'nom'  => $User->getPseudo(),
+                ),
+                'subject' => "Le coup de sifflet final du match ".$listTeam[$Match->getTeamA()]['nom'].' - '.$listTeam[$Match->getTeamB()]['nom']." a retenti dans le stade, quels sont vos gains?",
+                'body'    => "Bonjour,<br/>\n<br/>\nLe montant de votre gain est de ".$montant." € (Attention, c'est pas pour de vrai...) <br/>\n<br/>\nLe support.",
+                'altBody' => '',
+            ));
+            $SendMail->send();
+        }
     }
 }

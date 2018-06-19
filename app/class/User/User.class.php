@@ -54,7 +54,24 @@ class User {
      * @var bool
      */
     private $mailConfirm;
-
+    /**
+     * date a la quel il y a eu les derniere modification
+     * 
+     * @var string
+     */
+    private $dateUpdate;
+    /**
+     * activation newsLetter
+     * 
+     * @var bool
+     */
+    private $newsLetter;
+    /**
+     * accordRGPD
+     * 
+     * @var bool
+     */
+    private $accordRGPD;
     /**
      * Data user
      *
@@ -75,6 +92,12 @@ class User {
         if(empty($data['mailConfirm']) === true) {
             $data['mailConfirm'] = false;
         }
+        if(empty($data['newsLetter']) === true) {
+            $data['newsLetter'] = false;
+        }
+        if(empty($data['accordRGPD']) === true) {
+            $data['accordRGPD'] = true;
+        }
         $this->setId((int)$data['id']);
         $this->setNom((string)$data['nom']);
         $this->setPrenom((string)$data['prenom']);
@@ -83,6 +106,9 @@ class User {
         $this->setMail((string)$data['mail']);
         $this->setPassword((string)$data['password']);
         $this->setMailConfirm((bool)$data['mailConfirm']);
+        $this->setDateUpdate($data['dateUpdate']);
+        $this->setNewsLetter((bool)$data['newsLetter']);
+        $this->setAccordRGPD((bool)$data['accordRGPD']);
         if(empty($data['dataUser']) === true) {
             $data['dataUser'] = new DataUser(array());
         }
@@ -101,6 +127,9 @@ class User {
             'avatar'      => $this->getAvatar(),
             'mail'        => $this->getMail(),
             'mailConfirm' => $this->isMailConfirm(),
+            'dateUpdate'  => $this->getDateUpdate()->format('Y-m-d H:i:s'),
+            'newsLetter'  => $this->isNewsLetter(),
+            'accordRGPD'  => $this->isAccordRGPD(),
         );
     }
 
@@ -303,6 +332,85 @@ class User {
     public function getDataUser()
     {
         return $this->dataUser;
+    }
+
+    /**
+     * Get date a la quel il y a eu les derniere modification
+     *
+     * @return  string
+     */ 
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
+    }
+
+    /**
+     * Set date a la quel il y a eu les derniere modification
+     *
+     * @param  string|DateTime  $dateUpdate  date a la quel il y a eu les derniere modification
+     *
+     * @return  self
+     */ 
+    public function setDateUpdate($dateUpdate)
+    {
+        if($dateUpdate instanceof DateTime) {
+            $this->dateUpdate = $dateUpdate;
+        }
+        else {
+            if($dateUpdate === null) {
+                $dateUpdate = '';
+            }
+            $this->dateUpdate = new DateTime($dateUpdate);
+        }
+        return $this;
+    }
+
+    /**
+     * Get activation mail auto
+     *
+     * @return  bool
+     */ 
+    public function isNewsLetter()
+    {
+        return $this->newsLetter;
+    }
+
+    /**
+     * Set activation mail auto
+     *
+     * @param  bool  $newsLetter  activation mail auto
+     *
+     * @return  self
+     */ 
+    public function setNewsLetter(bool $newsLetter)
+    {
+        $this->newsLetter = $newsLetter;
+
+        return $this;
+    }
+
+    /**
+     * Get accordRGPD
+     *
+     * @return  bool
+     */ 
+    public function isAccordRGPD()
+    {
+        return $this->accordRGPD;
+    }
+
+    /**
+     * Set accordRGPD
+     *
+     * @param  bool  $accordRGPD  accordRGPD
+     *
+     * @return  self
+     */ 
+    public function setAccordRGPD(bool $accordRGPD)
+    {
+        $this->accordRGPD = $accordRGPD;
+
+        return $this;
     }
 
     /**
