@@ -168,6 +168,9 @@ class Match {
             $this->date = $date;
         }
         else {
+            if($dateUpdate === null) {
+                $dateUpdate = '';
+            }
             $this->date = new DateTime($date);
         }
 
