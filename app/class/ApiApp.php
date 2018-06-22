@@ -289,7 +289,7 @@ class ApiApp extends ApiRest {
             'listCotesHisto'        => \Cotes\CotesManagerMYSQL::loadAllCotes(),
             'listPari'              => \Pari\PariManagerMYSQL::loadListAllPari(),
             'listCagnotte'          => \Cagnotte\CagnotteManagerMYSQL::loadAllCagnotte(),
-            'listUser'              => \User\UserManagerMYSQL::loadListAllUser(),
+            'listUser'              => \User\UserManagerMYSQL::loadListAllUser(true),
             'listGroupeUser'        => \GroupeUser\GroupeUserManagerMYSQL::loadListAllGroupeUser(),
             'listGroupeUserDetail'  => \GroupeUserDetail\GroupeUserDetailManagerMYSQL::loadListAllGroupeUserDetail(),
             'listResultat'          => \Resultat\ResultatManagerMYSQL::loadListAllResultat(),
@@ -333,7 +333,7 @@ class ApiApp extends ApiRest {
 
 
         if(\Cotes\CotesManagerMYSQL::isCotesValide($Cotes) === true && empty($this->requestData['montant']) === false) {
-            $montant         = abs((float)$this->requestData['montant']);
+            $montant         = ceil(abs((float)$this->requestData['montant']));
             $listCagnotte    = \Cagnotte\CagnotteManagerMYSQL::loadCagnotteUser((int)$this->requestData['idUser']);
             $montantCagnotte = \Cagnotte\CagnotteManager::getCagnottesUser($listCagnotte);
             $Match           = \Match\MatchManagerMYSQL::loadMatch((int)$this->requestData['idMatch']);
@@ -348,7 +348,7 @@ class ApiApp extends ApiRest {
                         'idTypePari' => $this->requestData['idTypePari'],
                         'idUser'     => $this->requestData['idUser'],
                         'idCotes'    => $this->requestData['idCotes'],
-                        'montant'    => $this->requestData['montant'],
+                        'montant'    => $montant,
                         'gain'       => 0,
                         'date'       => $this->requestData['date'],
                     ));
@@ -361,7 +361,7 @@ class ApiApp extends ApiRest {
                             'idUser'  => $this->requestData['idUser'],
                             'idPari'  => $Pari->getId(),
                             'date'    => $this->requestData['date'],
-                            'montant' => $this->requestData['montant'] * -1,
+                            'montant' => $montant * -1,
                         ));
                         \Cagnotte\CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
                     }
@@ -449,7 +449,7 @@ class ApiApp extends ApiRest {
 
                 $listPari  = \Pari\PariManagerMYSQL::loadListPariForMatch($Match);
                 $listCotes = \Cotes\CotesManagerMYSQL::loadAllCotes();
-                $listUser  = \User\UserManagerMYSQL::loadListAllUser();
+                $listUser  = \User\UserManagerMYSQL::loadListAllUser(true);
                 $listTeam  = \Team\TeamManagerMYSQL::loadListAllTeam();
 
                 if(is_array($listPari) === true && empty($listPari) === false) {
@@ -479,7 +479,7 @@ class ApiApp extends ApiRest {
      * Chargement de a liste des utilisateur
      */
     private function loadListAllUser() {
-        $listUser  = \User\UserManagerMYSQL::loadListAllUser();
+        $listUser  = \User\UserManagerMYSQL::loadListAllUser(true);
         if(empty($listUser) === false) {
             $this->response($this->json($listUser), 200);
         }
@@ -492,9 +492,9 @@ class ApiApp extends ApiRest {
      * Chargement des infos d'un utilisateur en fonction de son idUser
      */
     private function loadUser() {
-        $user  = \User\UserManagerMYSQL::loadUser((int)$this->requestData['idUser']);
-        if(empty($user) === false) {
-            $this->response($this->json($user), 200);
+        $User  = \User\UserManagerMYSQL::loadUser((int)$this->requestData['idUser']);
+        if(empty($User) === false) {
+            $this->response($this->json($User), 200);
         }
         else {
             $this->response('', 204); 
@@ -512,6 +512,23 @@ class ApiApp extends ApiRest {
         }
         else {
             $this->response('', 204); 
+        }
+    }
+
+    private function addCagnotteLoser() {
+        $listUser  = \User\UserManagerMYSQL::loadListAllUser(true);
+
+        if(is_array($listUser) === true && empty($listUser) === false) {
+            foreach($listUser as $user) {
+                $User = new \User\User($user);
+                $Cagnotte = new \Cagnotte\Cagnotte(array(
+                    'id'      => -1,
+                    'idUser'  => $User->getId(),
+                    'date'    => new DateTime(),
+                    'montant' => 500,
+                ));
+                $Cagnotte = \Cagnotte\CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
+            }
         }
     }
 }

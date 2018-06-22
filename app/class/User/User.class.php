@@ -73,6 +73,12 @@ class User {
      */
     private $accordRGPD;
     /**
+     * User actif
+     * 
+     * @var bool
+     */
+    private $actif;
+    /**
      * Data user
      *
      * @var DataUser
@@ -109,6 +115,7 @@ class User {
         $this->setDateUpdate($data['dateUpdate']);
         $this->setNewsLetter((bool)$data['newsLetter']);
         $this->setAccordRGPD((bool)$data['accordRGPD']);
+        $this->setActif((bool)$data['actif']);
         if(empty($data['dataUser']) === true) {
             $data['dataUser'] = new DataUser(array());
         }
@@ -130,6 +137,7 @@ class User {
             'dateUpdate'  => $this->getDateUpdate()->format('Y-m-d H:i:s'),
             'newsLetter'  => $this->isNewsLetter(),
             'accordRGPD'  => $this->isAccordRGPD(),
+            'actif'       => $this->isActif(),
         );
     }
 
@@ -320,6 +328,30 @@ class User {
     public function setMailConfirm(bool $mailConfirm)
     {
         $this->mailConfirm = $mailConfirm;
+
+        return $this;
+    }
+
+    /**
+     * Get user actif
+     *
+     * @return  bool
+     */ 
+    public function isActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set user actif
+     *
+     * @param  bool  $actif  User actif
+     *
+     * @return  self
+     */ 
+    public function setActif(bool $actif)
+    {
+        $this->actif = $actif;
 
         return $this;
     }

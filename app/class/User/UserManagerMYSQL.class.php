@@ -22,7 +22,8 @@ class UserManagerMYSQL {
                 FROM user
                 WHERE
                     user.id = :idUser
-                    AND user.mailConfirm = 1";
+                    AND user.mailConfirm = 1
+                    AND user.actif = true";
         $data = array(
             ':idUser' => array(
                 'type'  => 'int',
@@ -41,26 +42,29 @@ class UserManagerMYSQL {
                 'pseudo'      => '',
                 'avatar'      => '',
                 'mail'        => '',
-                'mailConfirm' => false
+                'mailConfirm' => false,
+                'actif'       => true
             ));
         }
         
-        return $User;
+        return $User->getArray();
     }
 
     /**
      * Retourne la list complete des utilisateurs
-     *
+     * 
+     * @param bool actif
      * @return array listUser
      */
-    public static function loadListAllUser() {
+    public static function loadListAllUser($actif) {
         $listUser = array();
         $Db = Database::init();
         $req = "SELECT
                     *
                 FROM user
                 WHERE
-                    user.mailConfirm = 1";
+                    user.mailConfirm = 1
+                    AND user.actif = '".$actif."';";
         $res =  $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
