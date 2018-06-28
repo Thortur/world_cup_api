@@ -284,6 +284,7 @@ class ApiApp extends ApiRest {
             'listGroupeMatch'       => \GroupeMatch\GroupeMatchManagerMYSQL::loadListAllGroupe(),
             'listGroupeMatchDetail' => \GroupeMatchDetail\GroupeMatchDetailManagerMYSQL::loadListAllGroupeDetail(),
             'listMatch'             => \Match\MatchManagerMYSQL::loadListAllMatch(),
+            'listTypeMatch'         => \TypeMatch\TypeMatchManagerMYSQL::loadListAllTypeMatch(),
             'listTypePari'          => \TypePari\TypePariManagerMYSQL::loadListAllTypePari(),
             'listCotesLast'         => \Cotes\CotesManagerMYSQL::loadLastCotesToDate($dateNow),
             'listCotesHisto'        => \Cotes\CotesManagerMYSQL::loadAllCotes(),
@@ -515,6 +516,11 @@ class ApiApp extends ApiRest {
         }
     }
 
+    /**
+     * Ajoute d'une cagnotte en fin de journée de match
+     *
+     * @return void
+     */
     private function addCagnotteLoser() {
         $listUser  = \User\UserManagerMYSQL::loadListAllUser(true);
 

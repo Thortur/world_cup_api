@@ -121,6 +121,10 @@ class Team {
      */ 
     public function setIso2(string $iso2)
     {
+        if(empty($iso2) === true) {
+            $iso2 = '_NATO';
+        }
+
         $this->iso2 = $iso2;
 
         return $this;

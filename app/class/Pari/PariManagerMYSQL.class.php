@@ -111,7 +111,7 @@ class PariManagerMYSQL {
     public static function insertPari(Pari $Pari) {
         $Db = Database::init();
         
-        $req = "INSERT INTO pari (idMatch, idTypePari, idUser, idCotes, montant, date) VALUES (:idMatch, :idTypePari, :idUser, :idCotes, :montant, :date);";
+        $req = "INSERT INTO pari (idMatch, idTypePari, idUser, idCotes, montant, gain, date) VALUES (:idMatch, :idTypePari, :idUser, :idCotes, :montant, :gain, :date);";
         $data = array(
             ':idMatch' => array(
                 'type'  => 'int',
@@ -132,6 +132,10 @@ class PariManagerMYSQL {
             ':montant' => array(
                 'type'  => 'float',
                 'value' => $Pari->getMontant(),
+            ),
+            ':gain' => array(
+                'type'  => 'float',
+                'value' => $Pari->getGain(),
             ),
             ':date' => array(
                 'type'  => 'string',

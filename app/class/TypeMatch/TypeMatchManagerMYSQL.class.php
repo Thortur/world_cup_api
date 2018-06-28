@@ -20,7 +20,7 @@ class TypeMatchManagerMYSQL {
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
                 $TypeMatch = new TypeMatch($data);
-                $listTypeMatch[] = $TypeMatch->getArray();
+                $listTypeMatch[$TypeMatch->getId()] = $TypeMatch->getArray();
             }
             unset($data, $TypeMatch);
         }
