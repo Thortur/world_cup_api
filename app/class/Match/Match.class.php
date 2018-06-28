@@ -72,7 +72,10 @@ class Match {
         $this->setScoreTeamB((int)$data['scoreTeamB']);
         $this->setIdTypeMatch((int)$data['idTypeMatch']);
         $this->setIdGroupeMatch((int)$data['idGroupeMatch']);
-        $this->setIdVainqueur();
+        if(empty($data['idVainqueur']) === true) {
+            $data['idVainqueur'] = -1;
+        }
+        $this->setIdVainqueur($data['idVainqueur']);
     }
 
     /**
@@ -338,16 +341,21 @@ class Match {
      *
      * @return  self
      */ 
-    public function setIdVainqueur()
+    public function setIdVainqueur($idVainqueur)
     {
-        if($this->getScoreTeamA() > $this->getScoreTeamB()) {
-            $this->idVainqueur = $this->getTeamA();
-        }
-        else if($this->getScoreTeamA() < $this->getScoreTeamB()) {
-            $this->idVainqueur = $this->getTeamB();
+        if($idVainqueur === -1) {
+            $this->idVainqueur = $idVainqueur;
         }
         else {
-            $this->idVainqueur = 0;
+            if($this->getScoreTeamA() > $this->getScoreTeamB()) {
+                $this->idVainqueur = $this->getTeamA();
+            }
+            else if($this->getScoreTeamA() < $this->getScoreTeamB()) {
+                $this->idVainqueur = $this->getTeamB();
+            }
+            else {
+                $this->idVainqueur = 0;
+            }
         }
 
         return $this;

@@ -13,6 +13,13 @@ class TeamManagerMYSQL {
      */
     public static function loadListAllTeam() {
         $listTeam = array();
+        $Team = new Team(array(
+            'id'   => -1,
+            'nom'  => '?????',
+            'iso'  => null,
+            'iso2' => null,
+        ));
+        $listTeam[-1] = $Team->getArray();
         $Db = Database::init();
         $req = "SELECT
                     *

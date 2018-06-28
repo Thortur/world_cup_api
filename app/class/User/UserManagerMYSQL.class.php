@@ -213,6 +213,27 @@ class UserManagerMYSQL {
     }
 
     /**
+     * gestion de l'activation User
+     * 
+     * @param User $User
+     */
+    public static function gestionActivationUser(User $User) {
+        $Db = Database::init();
+        $req = "UPDATE user SET actif= :actif WHERE user.id= :idUser;";
+        $data = array(
+            ':actif' => array(
+                'type'  => 'bool',
+                'value' => $User->isActif(),
+            ),
+            ':idUser' => array(
+                'type'  => 'int',
+                'value' => $User->getId(),
+            )
+        );
+        $Db->execStatement($req, $data);
+    }
+
+    /**
      * Connexion utilisateur
      * 
      * @param string $pseudo

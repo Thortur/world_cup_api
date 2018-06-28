@@ -117,7 +117,7 @@ class SendRequete {
         $response = curl_exec($ch);
         curl_close($ch);
         unset($ch);
-        echo '000'.$response;
+        echo '@'.$response.'@';
         // var_dump($response);
         die;
         if(empty($response) === false) {
